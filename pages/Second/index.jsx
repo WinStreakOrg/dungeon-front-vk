@@ -97,6 +97,8 @@ const Index = () => {
       setPersonsValue(parseInt(personsSaved, 10) || 0);
     }
 
+    const userAgent = navigator.userAgent.toLowerCase();
+    console.log(userAgent.includes('safari'));
   }, []);
 
   return (

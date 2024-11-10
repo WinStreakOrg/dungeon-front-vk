@@ -1,20 +1,17 @@
-import Header from '../components/Header/Header';
-import Loading from '../pages/Loading';
-import { useEffect, useState } from 'react';
 import '../styles/globals.css';
+import Loading from '../pages/Loading';
+import bridge from '@vkontakte/vk-bridge';
+import { useEffect, useState } from 'react';
+import Header from '../components/Header/Header';
 import isPropValid from '@emotion/is-prop-valid';
 import { StyleSheetManager } from 'styled-components';
-import vkBridge from '@vkontakte/vk-bridge';
 
 export default function MyApp({ Component, pageProps }) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    vkBridge.send('VKWebAppInit');
-
-    vkBridge
-      .send('VKWebAppGetUserInfo')
-      .then((data) => {
+    bridge.send('VKWebAppInit');
+    bridge.send('VKWebAppGetUserInfo').then((data) => {
         console.log(data);
         setIsLoading(false);
       })

@@ -2,7 +2,8 @@
   "app_id": "52639894",
   "endpoints": [
     "mobile",
-    "mvk"
+    "mvk",
+    "web"
   ],
   "port": "3000",
   "http-protocol": "https",

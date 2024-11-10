@@ -2,8 +2,9 @@ import { BackGround } from '../components/ui/BackGround';
 import { Button, Root, Text } from '../components/FirstStage/Elements';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Stepper from '../components/ui/Stepper';
+import bridge from '@vkontakte/vk-bridge';
 
 
 export default function Home() {
@@ -27,6 +28,22 @@ export default function Home() {
   //   }
   // }, []);
 
+  async function getUserName() {
+    try {
+      const userInfo = await bridge.send('VKWebAppGetUserInfo');
+      const userName = `${userInfo.first_name} ${userInfo.last_name}`;
+      localStorage.setItem('userName', userName);
+    } catch (error) {
+      console.error('Failed to get user info:', error);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    getUserName();
+  }, []);
+
+
   const renderBranchButton = (address) => (
     <Button
       onClick={() => {
@@ -47,7 +64,7 @@ export default function Home() {
         <title>first-step</title>
       </Head>
       <Root>
-        <Text>Выберите филиал</Text>
+        <Text>Выберите филиал </Text>
         <div
           style={{
             position: 'relative',

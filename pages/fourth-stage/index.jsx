@@ -59,7 +59,7 @@ const Index = () => {
     const storedAddress = localStorage.getItem('address');
     const storedPersons = localStorage.getItem('persons');
     const storedHookah = localStorage.getItem('hookah');
-    // const storedUsername = localStorage.getItem('username');
+    const storedUsername = localStorage.getItem('username');
 
     if (
       storedZone &&
@@ -74,10 +74,10 @@ const Index = () => {
       setAddress(storedAddress);
       setPersons(storedPersons);
       setHookah(storedHookah);
-      // setUserName(storedUsername);
+      setUserName(storedUsername);
     }
   }, []);
-
+  console.log(userName);
   const createDeal = async () => {
     if (isValid) {
       try {
@@ -91,7 +91,7 @@ const Index = () => {
           persons,
           nameValue,
           phoneValue,
-          // userName,
+          userName,
         });
         if (response.status >= 200 && response.status < 300) {
           router.push('/final-stage');
@@ -152,10 +152,7 @@ const Index = () => {
         </div>
 
         <Container>
-          <Text size={20} isRussoOne>
-            {' '}
-            {address || 'не указан'}{' '}
-          </Text>
+          <Text size={20} isRussoOne>{address || 'не указан'}</Text>
           <div
             style={{
               display: 'flex',
@@ -170,8 +167,7 @@ const Index = () => {
             <Text size={20}> {time || 'не указан'} </Text>
           </div>
           <Text size={20}>
-            {' '}
-            {zone || 'не указн'} {hookah ? '+ Кальян' : 'не указан'}{' '}
+            {zone || 'не указн'} {hookah ? '+ Кальян' : 'не указан'}
           </Text>
         </Container>
 

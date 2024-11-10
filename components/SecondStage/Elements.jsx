@@ -10,9 +10,10 @@ const dateInput = css`
   border-radius: 12px;
   border: 1px solid #fff;
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px); /* Safari */
-
+  //backdrop-filter: blur(7px);
+  //-webkit-backdrop-filter: blur(7px); /* Safari */
+  z-index: 2;
+  cursor: pointer;
   color: #fff;
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 20px;
@@ -28,20 +29,22 @@ const dateInput = css`
     line-height: 110%;
   }
 
-  @media screen and (max-width: 382px) {
-    &::-webkit-calendar-picker-indicator {
-      display: block;
-      background-image: url('/images/icon-calendar.svg');
-      background-size: 16px;
-      background-repeat: no-repeat;
-      cursor: pointer;
-    }
+  &::-webkit-calendar-picker-indicator {
+    display: block;
+    background-image: url('/images/icon-calendar.svg');
+    background-size: 16px;
+    background-repeat: no-repeat;
+    cursor: pointer;
   }
-  @media screen and (min-width: 382px) {
-    &::-webkit-calendar-picker-indicator {
-      display: none;
-    }
-  }
+
+  //@media screen and (max-width: 382px) {
+  //  
+  //}
+  //@media screen and (min-width: 382px) {
+  //  &::-webkit-calendar-picker-indicator {
+  //    display: none;
+  //  }
+  //}
 `;
 
 const timeInput = css`
@@ -140,8 +143,21 @@ export const Root = styled.div`
 `;
 
 export const IconCalendar = styled.img`
+  display: none;
   @media screen and (min-width: 382px) {
     position: absolute;
+    display: none;
+    top: 14px;
+    right: 31px;
+    //background: red;
+    cursor: pointer;
+    appearance: none;
+    z-index: -1;
+  }
+
+  @media screen and (min-width: 600px) {
+    position: absolute;
+    display: none;
     top: 14px;
     right: 31px;
     width: 26px;
@@ -149,10 +165,6 @@ export const IconCalendar = styled.img`
     cursor: pointer;
     appearance: none;
     z-index: 1;
-  }
-
-  @media screen and (max-width: 382px) {
-    display: none;
   }
 `;
 
