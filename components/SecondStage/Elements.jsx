@@ -143,10 +143,10 @@ export const Root = styled.div`
 `;
 
 export const IconCalendar = styled.img`
-  display: none;
-  @media screen and (min-width: 382px) {
+  //display: none;
+  @media screen and (max-width: 382px) {
     position: absolute;
-    display: none;
+    display: block;
     top: 14px;
     right: 31px;
     //background: red;
