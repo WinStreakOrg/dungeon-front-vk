@@ -157,7 +157,7 @@ export const IconCalendar = styled.img`
 
   @media screen and (min-width: 600px) {
     position: absolute;
-    display: none;
+    display: block;
     top: 14px;
     right: 31px;
     width: 26px;
