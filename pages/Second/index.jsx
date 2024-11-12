@@ -103,6 +103,7 @@ const Index = () => {
       inputRef.current.showPicker();
     }
   };
+  console.log("fix----");
 
 
   return (<>
