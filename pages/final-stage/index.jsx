@@ -7,6 +7,7 @@ import {
   Root,
   Text,
 } from '../../components/final-stage/Elements';
+import bridge from '@vkontakte/vk-bridge';
 
 const Index = () => {
   const [bookingData, setBookingData] = useState({
@@ -35,36 +36,12 @@ const Index = () => {
   const { name, phone, zone, date, time, address, persons } =
     bookingData;
 
-  // const getLeads = async () => {
-  //
-  //   const response = await axios.get(`/api/getLeads/`);
-  //
-  //   // const data = response.data._embedded;
-  //   const data = response.data;
-  //   console.log(data);
-  // };
-
-  // const getLeadsById = async (id) => {
-  //   const response = await axios(`/api/getLeadsById/${id}`);
-  //
-  //   const data = response.data;
-  //   console.log(data);
-  // };
-
-  // const patchQuestion = async (id) => {
-  //
-  //   const response = await axios.patch(`/api/getLeads/${id}`, {});
-  //
-  //   const data = response.data;
-  //   console.log(data);
-  // };
-
-  // getLeads()
-
-  // getLeadsById();
+  // function closeApp() {
+  //   bridge.send('VKWebAppClose', { status: 'success' });
+  // }
 
   const handleCloseApp = () => {
-    if (window.Telegram?.WebApp) {
+    if (bridge) {
       localStorage.removeItem('time');
       localStorage.removeItem('persons');
       localStorage.removeItem('date');
@@ -75,7 +52,7 @@ const Index = () => {
       localStorage.removeItem('username');
       localStorage.removeItem('address');
 
-      window.Telegram?.WebApp?.close();
+      bridge.send('VKWebAppClose', { status: 'success' });
     } else {
       console.warn('Telegram WebApp API не доступен.');
     }
