@@ -10,8 +10,8 @@ const dateInput = css`
   border-radius: 12px;
   border: 1px solid #fff;
   background: rgba(255, 255, 255, 0.05);
-  //backdrop-filter: blur(7px);
-  //-webkit-backdrop-filter: blur(7px); /* Safari */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none; /* Safari */
   z-index: 2;
   cursor: pointer;
   color: #fff;
