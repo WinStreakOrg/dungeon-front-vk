@@ -29,13 +29,13 @@ const dateInput = css`
     line-height: 110%;
   }
 
-  &::-webkit-calendar-picker-indicator {
-    display: block;
-    background-image: url('/images/icon-calendar.svg');
-    background-size: 16px;
-    background-repeat: no-repeat;
-    cursor: pointer;
-  }
+  //&::-webkit-calendar-picker-indicator {
+  //  display: none;
+  //  background-image: url('/images/icon-calendar.svg');
+  //  background-size: 16px;
+  //  background-repeat: no-repeat;
+  //  cursor: pointer;
+  //}
 
   //@media screen and (max-width: 382px) {
   //  
@@ -144,28 +144,15 @@ export const Root = styled.div`
 
 export const IconCalendar = styled.img`
   //display: none;
-  @media screen and (max-width: 382px) {
-    position: absolute;
-    display: block;
-    top: 14px;
-    right: 31px;
-    //background: red;
-    cursor: pointer;
-    appearance: none;
-    z-index: -1;
-  }
-
-  @media screen and (min-width: 600px) {
-    position: absolute;
-    display: block;
-    top: 14px;
-    right: 31px;
-    width: 26px;
-    height: 25px;
-    cursor: pointer;
-    appearance: none;
-    z-index: 1;
-  }
+  position: absolute;
+  display: block;
+  top: 14px;
+  right: 31px;
+  width: 26px;
+  height: 25px;
+  cursor: pointer;
+  appearance: none;
+  z-index: -1;
 `;
 
 export const Form = styled.form`

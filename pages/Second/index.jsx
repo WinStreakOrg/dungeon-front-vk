@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CustomText from '../../components/ui/CustomText';
 import {
@@ -37,7 +37,7 @@ const Index = () => {
   const [personsValue, setPersonsValue] = useState(0);
 
   const [date, setDate] = useState('');
-
+  const inputRef = useRef(null);
   const [timeTotal, setTimeTotal] = useState();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -64,8 +64,6 @@ const Index = () => {
     const reversedDate = `${day}-${month}-${year}`;
 
     const time = selectedHour + ':' + selectedMinute;
-    // console.log(time);
-    // console.log(personsValue);
 
     if (time && personsValue > 0 && date) {
       localStorage.setItem('time', time);
@@ -99,6 +97,13 @@ const Index = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     console.log(userAgent.includes('safari'));
   }, []);
+
+  const handleIconClick = () => {
+    if (inputRef.current) {
+      inputRef.current.showPicker();
+    }
+  };
+
 
   return (<>
     <Head>
@@ -146,12 +151,14 @@ const Index = () => {
               <Input
                 isDateInput
                 type={'date'}
+                ref={inputRef}
                 value={date}
                 onChange={(event) => setDate(event.target.value)}
               />
               <IconCalendar
                 src="/images/icon-calendar.svg"
                 alt=""
+                onClick={handleIconClick}
               />
             </div>
           </div>
