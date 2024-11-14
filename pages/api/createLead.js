@@ -17,8 +17,6 @@ export default async function handler(req, res) {
     phoneValue,
   } = req.body;
 
-  // const [year, month, day] = date.split('-');
-  // const reversedDate = `${day}-${month}-${year}`;
   try {
     const response = await axios.post(`https://dungeonbrongmailcom.amocrm.ru/api/v4/leads`, JSON.stringify([{
       custom_fields_values: [{

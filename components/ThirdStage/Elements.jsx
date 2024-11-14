@@ -11,6 +11,7 @@ export const Root = styled.div`
   gap: 24px;
   //border: blue solid 1px;
   overflow: hidden;
+
 `;
 
 export const Form = styled.form`
@@ -21,8 +22,9 @@ export const Form = styled.form`
   align-items: start;
   gap: 24px;
 
-  input[type='date']::-webkit-calendar-picker-indicator {
-    background-image: url('/images/icon-calendar.svg');
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background-image: url("/images/icon-calendar.svg");
     background-size: 24px;
     background-position: 5px;
     margin: 0 15px 0 20px;
@@ -32,8 +34,8 @@ export const Form = styled.form`
   }
 
   span {
-    color: #fff;
-    font-family: 'Russo One', sans-serif;
+    color: #FFF;
+    font-family: "Russo One", sans-serif;
     font-size: 32px;
     font-style: normal;
     font-weight: 400;
@@ -52,11 +54,8 @@ export const Form = styled.form`
 `;
 
 export const Text = styled.p`
-  color: ${({ isGrey }) =>
-          isGrey ? 'rgba(255, 255, 255, 0.50)' : '#FFF'};
-  font-family: ${({ isRussoOne }) =>
-          isRussoOne ? 'Russo One' : 'IBM Plex Sans'},
-  sans-serif;
+  color: ${({ isGrey }) => isGrey ? 'rgba(255, 255, 255, 0.50)' : '#FFF'};
+  font-family: ${({ isRussoOne }) => isRussoOne ? 'Russo One' : 'IBM Plex Sans'}, sans-serif;
   font-size: ${({ size }) => size || 24}px !important;
   font-weight: 400;
   line-height: 110%;
@@ -78,10 +77,10 @@ export const Button = styled.button`
   margin: 0 auto;
 
   border-radius: 16px;
-  background: #c0ff3b;
+  background: #C0FF3B;
 
   color: #000;
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -102,32 +101,33 @@ export const Container = styled.div`
   border: 1px solid white;
   background: rgba(255, 255, 255, 0.05);
 
-  ${({ isActive }) =>
-  isActive &&
-  css`
-      border: 1px solid #a54bff;
-      backdrop-filter: blur(7px);
-    `}
+  ${({ isActive }) => isActive && css`
+    border: 1px solid #A54BFF;
+    backdrop-filter: blur(7px);
+  `}
 `;
 
-export const SwiperContainer = styled.div`
-  position: relative;
-  width: 326px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 
-  img {
-    object-fit: cover;
-  }
-
-  .swiper-wrapper {
+export const SwiperContainer = styled.div
+  `
+    position: relative;
+    width: 326px;
     display: flex;
     flex-direction: row;
-    //overflow: hidden;
-    max-width: 326px;
-  }
-`;
+    align-items: center;
+
+    img {
+      object-fit: cover;
+    }
+
+    .swiper-wrapper {
+      display: flex;
+      flex-direction: row;
+      //overflow: hidden;
+      max-width: 326px;
+    }
+
+  `;
 
 export const Prev = styled.button`
   position: absolute;
@@ -156,3 +156,15 @@ export const Next = styled.button`
   right: 18px;
   z-index: 111;
 `;
+
+
+export const Accept = styled.button.attrs({ type: 'button' })
+  `
+    background: #C0FF3B;
+    width: 63px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
