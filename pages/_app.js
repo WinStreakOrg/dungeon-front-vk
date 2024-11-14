@@ -20,7 +20,7 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <div className="App">
-      <Header />
+      <Header winStreak />
       <StyleSheetManager
         shouldForwardProp={(prop) => isPropValid(prop)}>
         {isLoading ? <Loading /> : <Component {...pageProps} />}
