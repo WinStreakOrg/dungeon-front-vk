@@ -209,7 +209,11 @@ export const Input = styled.input`
   ${({ isDateInput }) => isDateInput && dateInput}
   ${({ isTimeInput }) => isTimeInput && timeInput}
   ${({ isPersonInput }) => isPersonInput && personInput}
+  ${({ isNotValid }) => isNotValid && css`
+    border: 1px solid #FF4B55 !important;
+  `}
 `;
+
 
 export const Button = styled.button`
   ${({ isButtonPerson }) => isButtonPerson && personButton}

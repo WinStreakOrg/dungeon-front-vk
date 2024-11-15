@@ -28,6 +28,7 @@ const Index = () => {
   const [vipZone, setVipZone] = useState(false);
   const router = useRouter();
   const [address, setAddress] = useState('');
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
 
   const handleSaveZone = (zone) => {
     if (zone) {
@@ -54,10 +55,10 @@ const Index = () => {
             <Text>Выберите зону отдыха</Text>
           </div>
           <div style={{ position: 'relative', width: '358px', height: '28px' }}>
-            <Stepper url={'/'} id={1} left={0} />
-            <Stepper url={'/Second'} id={2} left={110} />
-            <Stepper url={'/third-stage'} id={3} left={220} />
-            <Stepper url={'/fourth-stage'} id={4} left={328} />
+            <Stepper canNavigateForward={true} url={'/'} id={1} left={0} />
+            <Stepper canNavigateForward={true} url={'/Second'} id={2} left={110} />
+            <Stepper canNavigateForward={isAddressSelected} url={'/third-stage'} id={3} left={220} />
+            <Stepper canNavigateForward={isAddressSelected} url={'/fourth-stage'} id={4} left={328} />
             <img width={'100%'} alt={''} src={'/images/third-stage.svg'} />
           </div>
 

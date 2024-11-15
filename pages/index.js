@@ -6,27 +6,18 @@ import React, { useEffect, useState } from 'react';
 import Stepper from '../components/ui/Stepper';
 import bridge from '@vkontakte/vk-bridge';
 
+const addresses = ['ул. Революционная, 155', 'ул. Полевая, 72', 'Московское шоссе, 43'];
 
 export default function Home() {
   const router = useRouter();
-
-  const saveAddressToLocalStorage = (item) =>
-    localStorage.setItem('address', item);
-
   const [focusedButton, setFocusedButton] = useState(null);
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
 
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-  //     const tg = window.Telegram?.WebApp;
-  //     const user = tg.initDataUnsafe?.user;
-  //
-  //     if (user) {
-  //       localStorage.setItem('username', user.username);
-  //     } else {
-  //       return undefined;
-  //     }
-  //   }
-  // }, []);
+  const saveAddressToLocalStorage = (item) => {
+    localStorage.setItem('address', item);
+    setIsAddressSelected(true);
+  }
+
 
   async function getUserName() {
     try {
@@ -43,16 +34,8 @@ export default function Home() {
     getUserName();
   }, []);
 
-
-  const renderBranchButton = (address) => (
-    <Button
-      onClick={() => {
-        saveAddressToLocalStorage(address);
-        setFocusedButton(address);
-        router.push('/Second');
-      }}
-      isFocused={focusedButton === address}
-    >
+  const BranchButton = ({ address, onClick, isFocused }) => (
+    <Button onClick={onClick} isFocused={isFocused}>
       <p>{address}</p>
       <img alt="" width={16} height={16} src="/images/arrow.svg" />
     </Button>
@@ -72,10 +55,10 @@ export default function Home() {
             height: '28px',
           }}
         >
-          <Stepper url={'/'} id={1} left={0} />
-          <Stepper url={'/Second'} id={2} left={110} />
-          <Stepper url={'/third-stage'} id={3} left={220} />
-          <Stepper url={'/fourth-stage'} id={4} left={328} />
+          <Stepper canNavigateForward={true} url={'/'} id={1} left={0} />
+          <Stepper canNavigateForward={isAddressSelected} url={'/Second'} id={2} left={110} />
+          <Stepper canNavigateForward={isAddressSelected} url={'/third-stage'} id={3} left={220} />
+          <Stepper canNavigateForward={isAddressSelected} url={'/fourth-stage'} id={4} left={328} />
           <img
             width={'100%'}
             alt={''}
@@ -83,9 +66,18 @@ export default function Home() {
           />
         </div>
 
-        {renderBranchButton('ул. Революционная, 155')}
-        {renderBranchButton('ул. Полевая, 72')}
-        {renderBranchButton('Московское шоссе, 43')}
+        {addresses.map((address) => (
+          <BranchButton
+            key={address}
+            address={address}
+            onClick={() => {
+              saveAddressToLocalStorage(address);
+              setFocusedButton(address);
+              router.push('/Second');
+            }}
+            isFocused={focusedButton === address}
+          />
+        ))}
 
         <BackGround
           bottom={10}

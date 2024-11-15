@@ -4,9 +4,9 @@ import {
   CheckboxContainer,
   Container,
   CustomCheckbox,
-  ErrorText,
   HiddenCheckbox,
   Input,
+  Loading,
   Nav,
   Root,
   Text,
@@ -19,16 +19,23 @@ import { BackGround } from '../../components/ui/BackGround';
 import { useForm } from 'react-hook-form';
 import Stepper from '../../components/ui/Stepper';
 import Head from 'next/head';
+import { ErrorText } from '../../components/ui/ErrorText';
+
 
 const Index = () => {
+
   const router = useRouter();
+
 
   const {
     register,
     handleSubmit,
     setValue,
     // setError,
-    formState: { errors, isValid },
+    formState: {
+      errors,
+      isValid,
+    },
     // trigger,
     // resetField,
   } = useForm({
@@ -48,6 +55,10 @@ const Index = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleBlur = () => setIsFocused(true);
   const handleFocus = () => setIsFocused(false);
   const toggleCheckbox = () => setIsChecked(!isChecked);
@@ -61,13 +72,7 @@ const Index = () => {
     const storedHookah = localStorage.getItem('hookah');
     const storedUsername = localStorage.getItem('username');
 
-    if (
-      storedZone &&
-      storedTime &&
-      storedDate &&
-      storedAddress &&
-      storedPersons
-    ) {
+    if (storedZone && storedTime && storedDate && storedAddress && storedPersons) {
       setZone(storedZone);
       setTime(storedTime);
       setDate(storedDate);
@@ -76,42 +81,36 @@ const Index = () => {
       setHookah(storedHookah);
       setUserName(storedUsername);
     }
+
   }, []);
-  console.log(userName);
+
   const createDeal = async () => {
     if (isValid) {
+      setIsLoading(true);
       try {
         const response = await axios.post('/api/createLead', {
-          zone,
-          time,
-          date,
-          comment,
-          address,
-          hookah,
-          persons,
-          nameValue,
-          phoneValue,
-          userName,
+          zone, time, date, comment, address, hookah, persons, nameValue, phoneValue, userName,
         });
         if (response.status >= 200 && response.status < 300) {
           router.push('/final-stage');
         } else {
-          console.error('ошибка запроса');
+          console.error('Ошибка запроса');
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       console.error('Имя или телефон не заполнены');
-      return;
     }
   };
-
   const saveNameToLocalStorage = () => {
     if (nameValue && phoneValue) {
       localStorage.setItem('name', nameValue);
       localStorage.setItem('phone', phoneValue);
       localStorage.setItem('comment', comment);
+      setIsAddressSelected(true);
       createDeal();
     } else {
       return undefined;
@@ -124,162 +123,112 @@ const Index = () => {
         <title>fourth-step</title>
       </Head>
       <Root>
-        <Nav
-          onClick={() => router.push('/third-stage')}
-          id={'container'}
-        >
+        <Nav onClick={() => router.push('/third-stage')} id={'container'}>
           <img src="/images/arrow-back.svg" alt="" />
           <Text>Контактные данные</Text>
         </Nav>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '358px',
-            height: '28px',
-          }}
-        >
-          <Stepper url={'/'} id={1} left={0} />
-          <Stepper url={'/Second'} id={2} left={110} />
-          <Stepper url={'/third-stage'} id={3} left={220} />
-          <Stepper url={'/fourth-stage'} id={4} left={328} />
-          <Image
-            alt={''}
-            src={'/images/FourthStage.svg'}
-            width={358}
-            height={28}
-          />
+        <div style={{ position: 'relative', width: '358px', height: '28px' }}>
+          <Stepper canNavigateForward={true} url={'/'} id={1} left={0} />
+          <Stepper canNavigateForward={true} url={'/Second'} id={2} left={110} />
+          <Stepper canNavigateForward={true} url={'/third-stage'} id={3} left={220} />
+          <Stepper canNavigateForward={isAddressSelected} url={'/fourth-stage'} id={4} left={328} />
+          <Image alt={''} src={'/images/FourthStage.svg'} width={358} height={28} />
         </div>
 
         <Container>
-          <Text size={20} isRussoOne>{address || 'не указан'}</Text>
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              alignItems: 'center',
-            }}
-          >
+          <Text size={20} isRussoOne> {address || 'не указан'} </Text>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <Text size={20}> {persons || 'не указан'} гостя </Text>
             <img src="/images/point.svg" alt="" />
             <Text size={20}> {date || 'не указан'} </Text>
             <img src="/images/point.svg" alt="" />
             <Text size={20}> {time || 'не указан'} </Text>
           </div>
-          <Text size={20}>
-            {zone || 'не указн'} {hookah ? '+ Кальян' : 'не указан'}
-          </Text>
+          <Text size={20}> {zone || 'не указн'} {hookah ? '+ Кальян' : 'не указан'} </Text>
         </Container>
 
         <form onSubmit={handleSubmit(saveNameToLocalStorage)}>
           <div>
-            <Text size={16}>Ваше ФИО</Text>
-            <Input
-              placeholder={'Фамилия Имя'}
-              value={nameValue}
-              type={'text'}
-              isNotValid={errors.nameValue}
-              isNameInput
-              {...register('nameValue', {
-                required: 'Это обязательное поле',
-                onChange: (e) => setNameValue(e.target.value),
-              })}
+            <Text size={16}>
+              Ваше ФИО
+            </Text>
+            <Input placeholder={'Фамилия Имя'}
+                   value={nameValue}
+                   type={'text'}
+                   isNotValid={errors.nameValue}
+                   isNameInput
+                   {...register('nameValue', {
+                     required: 'Это обязательное поле', onChange: (e) => setNameValue(e.target.value),
+                   })}
             />
-            {errors.nameValue && (
-              <ErrorText>{errors.nameValue.message}</ErrorText>
-            )}
+            {errors.nameValue && <ErrorText>{errors.nameValue.message}</ErrorText>}
           </div>
           <div>
-            <Text size={16}>Контактный телефон</Text>
-            <Input
-              placeholder={'+7'}
-              value={phoneValue}
-              isNotValid={errors.phoneValue}
-              type={'number'}
-              onFocus={handleFocus}
-              isPhoneInput
-              {...register('phoneValue', {
-                required: 'Это обязательное поле',
-                onBlur: () => setIsFocused(true),
-                onChange: (e) => setPhoneValue(e.target.value),
-              })}
+            <Text size={16}>
+              Контактный телефон
+            </Text>
+            <Input placeholder={'+7'}
+                   value={phoneValue}
+                   isNotValid={errors.phoneValue}
+                   type={'number'}
+                   onFocus={handleFocus}
+                   isPhoneInput
+                   {...register('phoneValue', {
+                     required: 'Это обязательное поле',
+                     onBlur: () => setIsFocused(true),
+                     onChange: (e) => setPhoneValue(e.target.value),
+                   })}
             />
-            {errors.phoneValue && (
-              <ErrorText>{errors.phoneValue.message}</ErrorText>
-            )}
+            {errors.phoneValue && <ErrorText>{errors.phoneValue.message}</ErrorText>}
           </div>
           <div>
-            <Text size={16}>Комментарий</Text>
-            <Input
-              placeholder={'Текст комментария'}
-              value={comment}
-              type={'text'}
-              onChange={(e) => setComment(e.target.value)}
-              isCommentInput
-            />
+            <Text size={16}>
+              Комментарий
+            </Text>
+            <Input placeholder={'Текст комментария'}
+                   value={comment}
+                   type={'text'}
+                   onChange={(e) => setComment(e.target.value)}
+                   isCommentInput />
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                gap: '8px',
-                alignItems: 'start',
-              }}
-            >
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'start' }}>
               <CheckboxContainer>
-                <HiddenCheckbox
-                  checked={isChecked}
-                  {...register('checkBox', {
-                    required: 'Это обязательное поле',
-                    onChange: () => toggleCheckbox(),
-                  })}
+                <HiddenCheckbox checked={isChecked}
+                                {...register('checkBox', {
+                                  required: 'Это обязательное поле',
+                                  onChange: () => toggleCheckbox(),
+                                })}
                 />
-                <CustomCheckbox
-                  isNotValid={errors.checkBox}
-                  checked={isChecked}
-                />
+                <CustomCheckbox isNotValid={errors.checkBox} checked={isChecked} />
               </CheckboxContainer>
 
-              <Text
-                onClick={() => router.push('/personal-data')}
-                width={'330'}
-                size={16}
-              >
-                Даю подтверждение на{' '}
-                <CustomText color>
-                  {' '}
-                  обработку персональных данных.
-                </CustomText>
+              <Text onClick={() => router.push('/personal-data')} width={'330'} size={16}>
+                Даю подтверждение на <CustomText color> обработку персональных данных.</CustomText>
               </Text>
             </div>
             <div style={{ paddingLeft: '25px' }}>
-              {errors.checkBox && (
-                <ErrorText>{errors.checkBox.message}</ErrorText>
-              )}
+              {errors.checkBox && <ErrorText>{errors.checkBox.message}</ErrorText>}
             </div>
+
           </div>
-          <Button type={'submit'} onClick={saveNameToLocalStorage}>
-            Подтвердить бронь
+          <Button isLoading={isLoading} type="submit" disabled={isLoading}>
+            {isLoading ?
+              <Loading>
+                <Image src="/images/Vector-loading.svg"
+                       alt="Загрузка..."
+                       width={24}
+                       height={24} />
+              </Loading>
+              :
+              'Подтвердить бронь'
+            }
           </Button>
         </form>
 
-        <BackGround
-          height={289}
-          width={176}
-          bottom={47}
-          left={197}
-          src={'/images/smoke-1.png'}
-        />
-        <BackGround
-          bottom={231}
-          left={0}
-          src={'/images/controller.png'}
-        />
+        <BackGround height={289} width={176} bottom={47} left={197} src={'/images/smoke-1.png'} />
+        <BackGround bottom={231} left={0} src={'/images/controller.png'} />
       </Root>
     </>
   );
