@@ -56,9 +56,12 @@ const Index = () => {
           </div>
           <div style={{ position: 'relative', width: '358px', height: '28px' }}>
             <Stepper canNavigateForward={true} url={'/'} id={1} left={0} />
-            <Stepper canNavigateForward={true} url={'/Second'} id={2} left={110} />
-            <Stepper canNavigateForward={isAddressSelected} url={'/third-stage'} id={3} left={220} />
-            <Stepper canNavigateForward={isAddressSelected} url={'/fourth-stage'} id={4} left={328} />
+            <Stepper canNavigateForward={true} url={'/Second'} id={2}
+                     left={110} />
+            <Stepper canNavigateForward={isAddressSelected} url={'/third-stage'}
+                     id={3} left={220} />
+            <Stepper canNavigateForward={isAddressSelected}
+                     url={'/fourth-stage'} id={4} left={328} />
             <img width={'100%'} alt={''} src={'/images/third-stage.svg'} />
           </div>
 
@@ -91,10 +94,11 @@ const Index = () => {
                         return (
                           <SwiperSlide style={{ maxWidth: '326px' }}
                                        key={image}>
-                            <img alt=""
-                                 height={200}
-                                 width={326}
-                                 src={image}
+                            <Image alt=""
+                                   height={200}
+                                   width={326}
+                                   src={image}
+                                   loading="lazy"
                             />
                           </SwiperSlide>
                         );
@@ -157,10 +161,11 @@ const Index = () => {
                         return (
                           <SwiperSlide style={{ maxWidth: '326px' }}
                                        key={image}>
-                            <img alt=""
-                                 height={200}
-                                 width={326}
-                                 src={image}
+                            <Image alt=""
+                                   height={200}
+                                   width={326}
+                                   src={image}
+                                   loading={'lazy'}
                             />
                           </SwiperSlide>
                         );
@@ -218,10 +223,11 @@ const Index = () => {
                         return (
                           <SwiperSlide style={{ maxWidth: '326px' }}
                                        key={image}>
-                            <img alt=""
-                                 height={200}
-                                 width={326}
-                                 src={image}
+                            <Image alt=""
+                                   height={200}
+                                   width={326}
+                                   src={image}
+                                   loading="lazy"
                             />
                           </SwiperSlide>
                         );
@@ -285,10 +291,11 @@ const Index = () => {
                         return (
                           <SwiperSlide style={{ maxWidth: '326px' }}
                                        key={image}>
-                            <img alt=""
-                                 height={200}
-                                 width={326}
-                                 src={image}
+                            <Image alt=""
+                                   height={200}
+                                   width={326}
+                                   src={image}
+                                   loading="lazy"
                             />
                           </SwiperSlide>
                         );
@@ -347,10 +354,11 @@ const Index = () => {
                         return (
                           <SwiperSlide style={{ maxWidth: '326px' }}
                                        key={image}>
-                            <img alt=""
-                                 height={200}
-                                 width={326}
-                                 src={image}
+                            <Image alt=""
+                                   height={200}
+                                   width={326}
+                                   src={image}
+                                   loading="lazy"
                             />
                           </SwiperSlide>
                         );

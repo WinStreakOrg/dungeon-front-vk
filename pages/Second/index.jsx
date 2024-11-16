@@ -38,7 +38,7 @@ const Index = () => {
       isValid,
     },
     setError,
-    // trigger,
+    trigger,
     // resetField,
   } = useForm({
     mode: 'onSubmit',
@@ -47,12 +47,10 @@ const Index = () => {
   const [selectedHourMenu, setSelectedHourMenu] = useState(false);
   const [selectedMinuteMenu, setSelectedMinuteMenu] = useState(false);
 
-  const [selectedHour, setSelectedHour] = useState('');
-  const [selectedMinute, setSelectedMinute] = useState('');
+  const [selectedHour, setSelectedHour] = useState('12');
+  const [selectedMinute, setSelectedMinute] = useState('00');
   const [personsValue, setPersonsValue] = useState(0);
-
   const [date, setDate] = useState('');
-
   const [timeTotal, setTimeTotal] = useState();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -63,32 +61,65 @@ const Index = () => {
   const handlePlus = () => {
     setPersonsValue((prev) => {
       const newValue = prev + 1;
-      localStorage.setItem('persons', newValue);
-      return newValue;
-    });
-  };
-  const handleMinus = () => {
-    setPersonsValue((prev) => {
-      const newValue = prev > 0 ? prev - 1 : 0;
-      localStorage.setItem('persons', newValue);
+      setValue('personsValue', newValue);
       return newValue;
     });
   };
 
+  const handleMinus = () => {
+    setPersonsValue((prev) => {
+      const newValue = prev > 0 ? prev - 1 : 0;
+      setValue('personsValue', newValue);
+      return newValue;
+    });
+  };
+  useEffect(() => {
+
+    if (!selectedHour && !selectedMinute && !personsValue && !date && !timeTotal) {
+      const timeSaved = localStorage.getItem('time');
+      const personsSaved = localStorage.getItem('persons');
+      const dateSaved = localStorage.getItem('date');
+
+      if (dateSaved) {
+        const [day, month, year] = dateSaved.split('-');
+        const formattedDate = `${year}-${month}-${day}`;
+        setDate(formattedDate);
+
+        setValue('dateValue', formattedDate);
+      }
+
+      if (timeSaved) {
+        const [hour, minute] = timeSaved.split(':');
+        setSelectedHour(hour);
+        setSelectedMinute(minute);
+      }
+
+      if (personsSaved) {
+        setPersonsValue(personsSaved);
+        setValue('personsValue', savedValue);
+      }
+    }
+
+  }, [setValue]);
+
+
   const dataSubmit = (data) => {
-    // console.log(data);
-    // if (data.personsValue === 0) {
-    //   setError('personsValue', {
-    //     type: 'manual',
-    //     message: 'Это обязательное поле',
-    //   })
-    //   return;
-    // }
+    console.log(data.personsValue); // Теперь значение будет актуальным
+
+    if (!data.personsValue || data.personsValue === '0') {
+      setError('personsValue', {
+        type: 'manual',
+        message: 'Введите кол-во персон',
+      });
+      return;
+    }
+
     const [year, month, day] = date.split('-');
     const reversedDate = `${day}-${month}-${year}`;
     const time = selectedHour + ':' + selectedMinute;
 
-    if (time && personsValue > 0 && date) {
+    // console.log(reversedDate);
+    if (time && personsValue && reversedDate) {
       localStorage.setItem('time', time);
       localStorage.setItem('persons', personsValue);
       localStorage.setItem('date', reversedDate);
@@ -97,81 +128,25 @@ const Index = () => {
       } else {
         localStorage.setItem('hookah', 'не буду');
       }
-
       router.push('/third-stage');
     }
   };
-
-  // useEffect(() => {
-  //
-  //   const timeSaved = localStorage.getItem('time');
-  //   const personsSaved = localStorage.getItem('persons');
-  //   const dateSaved = localStorage.getItem('date');
-  //
-  //   const splitedTime = timeSaved ? timeSaved.split(':') : ['', ''];
-  //   const hour = splitedTime[0];
-  //   const minute = splitedTime[1];
-  //
-  //   setDate(dateSaved || '');
-  //   setSelectedHour(hour || '');
-  //   setSelectedMinute(minute || '');
-  //   setPersonsValue(parseInt(personsSaved, 10) || 0);
-  //
-  //   setValue('dateValue', dateSaved || '', { shouldValidate: false });
-  //   setValue('hourValue', hour || '', { shouldValidate: false });
-  //   setValue('minuteValue', minute || '', { shouldValidate: false });
-  //   setValue('persons', parseInt(personsSaved, 10) || 0, { shouldValidate: false });
-  //
-  //
-  //   setValue('dateValue', dateSaved || '', { shouldValidate: false });
-  //   setValue('hourValue', selectedHour, { shouldValidate: false });
-  //   setValue('minuteValue', selectedMinute, { shouldValidate: false });
-  //   setValue('persons', personsValue, { shouldValidate: false });
-  //
-  //   // if (selectedHour === '' && selectedMinute === "" && personsValue === "" && date === "") {
-  //   //   const timeSaved = localStorage.getItem('time');
-  //   //   const personsSaved = localStorage.getItem('persons');
-  //   //   const dateSaved = localStorage.getItem('date');
-  //   //   const splitedTime = timeSaved ? timeSaved.split(':') : ['', ''];
-  //   //   const hour = splitedTime[0];
-  //   //   const minute = splitedTime[1];
-  //   //
-  //   //   setDate(dateSaved || '');
-  //   //   setSelectedHour(hour || '');
-  //   //   setSelectedMinute(minute || '');
-  //   //   setPersonsValue(parseInt(personsSaved, 10) || 0);
-  //   // }
-  //
-  // }, [setValue]);
-
-  useEffect(() => {
-    const timeSaved = localStorage.getItem('time');
-    const personsSaved = localStorage.getItem('persons');
-    const dateSaved = localStorage.getItem('date');
-
-    const splitedTime = timeSaved ? timeSaved.split(':') : ['', ''];
-
-    const [day, month, year] = dateSaved ? dateSaved.split('-') : ['', '', ''];
-    const formattedDate = `${year}-${month}-${day}`;
-
-    const hour = splitedTime[0];
-    const minute = splitedTime[1];
-
-    setDate(formattedDate || '');
-    setSelectedHour(hour || '');
-    setSelectedMinute(minute || '');
-    setPersonsValue(parseInt(personsSaved, 10) || 0);
-
-    setValue('dateValue', formattedDate || '', { shouldValidate: false });
-    setValue('hourValue', hour || '', { shouldValidate: false });
-    setValue('minuteValue', minute || '', { shouldValidate: false });
-    setValue('personsValue', parseInt(personsSaved, 10) || 0, { shouldValidate: false });
-  }, [setValue]);
 
 
   useEffect(() => {
     if (isValid) setIsAddressSelected(true);
   }, [isValid]);
+
+
+  const handleHourChange = (e) => {
+    setSelectedHour(e.target.value);
+    trigger('hourValue');
+  };
+
+  const handleMinuteChange = (e) => {
+    setSelectedMinute(e.target.value);
+    trigger('minuteValue');
+  };
 
 
   return (
@@ -200,7 +175,7 @@ const Index = () => {
                 <Input isDateInput
                        type={'date'}
                        isNotValid={errors?.dateValue}
-                       value={date}
+                       value={date || ''}
                        {...register('dateValue', {
                          required: 'Это обязательное поле',
                          onChange: (e) => setDate(e.target.value),
@@ -216,16 +191,16 @@ const Index = () => {
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div>
                 <Input onClick={() => setSelectedHourMenu(!selectedHourMenu)}
-                       value={selectedHour}
                        isTimeInput
-                       isNotValid={errors?.hourValue}
+                       isNotValid={errors.hourValue}
                        readOnly
                        type="text"
+                       value={selectedHour}
+                       onChange={handleHourChange}
                        pattern="\d{1,2}"
                        maxLength={2}
                        {...register('hourValue', {
                          required: 'Это обязательное поле',
-                         onChange: (e) => setSelectedHour(e.target.value),
                        })}
                 />
                 {selectedHourMenu && (<ColumnHourWrapper isOpen={selectedHourMenu}>
@@ -246,16 +221,16 @@ const Index = () => {
               <span className={'span'}>:</span>
               <div style={{ position: 'relative' }}>
                 <Input onClick={() => setSelectedMinuteMenu(!selectedMinuteMenu)}
-                       value={selectedMinute}
                        isTimeInput
                        readOnly
                        type="text"
-                       isNotValid={errors?.minuteValue}
+                       value={selectedMinute}
+                       isNotValid={errors.minuteValue}
                        pattern="\d{1,2}"
                        maxLength={2}
+                       onChange={handleMinuteChange}
                        {...register('minuteValue', {
                          required: 'Это обязательное поле',
-                         onChange: (e) => setSelectedMinute(e.target.value),
                        })}
                 />
                 {selectedMinuteMenu && (<ColumnMinutesWrapper isOpen={selectedMinuteMenu}>
@@ -274,9 +249,11 @@ const Index = () => {
                 </ColumnMinutesWrapper>)}
               </div>
             </div>
-            {errors?.hourValue || errors?.minuteValue ? <ErrorText>Это обязательное поле</ErrorText> : ''}
+            {errors?.hourValue
+              // ||
+              // errors?.minuteValue
+              ? <ErrorText>Это обязательное поле</ErrorText> : ''}
           </div>
-
           <div style={{ display: 'flex', width: '100%', flexDirection: 'column', gap: '8px' }}>
             <Text size={16}>Количество персон</Text>
 
@@ -291,7 +268,7 @@ const Index = () => {
                      isPersonInput
                      readOnly
                      type={'number'}
-                     isNotValid={errors?.personsValue || !personsValue}
+                     isNotValid={errors?.personsValue}
                      {...register('personsValue', {
                        required: 'Это обязательное поле',
                      })}
@@ -303,7 +280,7 @@ const Index = () => {
               </Button>
             </div>
             {errors?.personsValue && <ErrorText>{errors.personsValue.message}</ErrorText>}
-            {personsValue === 0 && <ErrorText>Это обязательное поле</ErrorText>}
+            {/*{personsValue === 0 && <ErrorText>Это обязательное поле</ErrorText>}*/}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Text isUppercase size={16}><CustomText isValid={isChecked}>Буду кальян</CustomText></Text>

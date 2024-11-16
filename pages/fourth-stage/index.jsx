@@ -168,17 +168,42 @@ const Index = () => {
             <Text size={16}>
               Контактный телефон
             </Text>
-            <Input placeholder={'+7'}
-                   value={phoneValue}
-                   isNotValid={errors.phoneValue}
-                   type={'number'}
-                   onFocus={handleFocus}
-                   isPhoneInput
-                   {...register('phoneValue', {
-                     required: 'Это обязательное поле',
-                     onBlur: () => setIsFocused(true),
-                     onChange: (e) => setPhoneValue(e.target.value),
-                   })}
+            <Input
+              placeholder={'+7'}
+              value={phoneValue}
+              isNotValid={errors.phoneValue}
+              type={'tel'}
+              onFocus={handleFocus}
+              isPhoneInput
+              {...register('phoneValue', {
+                required: 'Это обязательное поле',
+                onBlur: () => setIsFocused(true),
+                onChange: (e) => {
+                  let inputValue = e.target.value.replace(/\D/g, '');
+
+                  if (inputValue.startsWith('8')) {
+                    inputValue = '7' + inputValue.slice(1);
+                  }
+                  if (!inputValue.startsWith('7')) {
+                    inputValue = '7' + inputValue;
+                  }
+
+                  const part1 = inputValue.slice(1, 4);
+                  const part2 = inputValue.slice(4, 7);
+                  const part3 = inputValue.slice(7, 9);
+                  const part4 = inputValue.slice(9, 11);
+
+                  let formattedValue = `+7`;
+
+                  if (part1) formattedValue += `-(${part1}`;
+                  if (part1 && inputValue.length >= 4) formattedValue += `)`;
+                  if (part2) formattedValue += `-${part2}`;
+                  if (part3) formattedValue += `-${part3}`;
+                  if (part4) formattedValue += `-${part4}`;
+
+                  setPhoneValue(formattedValue);
+                },
+              })}
             />
             {errors.phoneValue && <ErrorText>{errors.phoneValue.message}</ErrorText>}
           </div>

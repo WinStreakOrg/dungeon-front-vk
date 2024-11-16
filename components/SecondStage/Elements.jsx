@@ -8,45 +8,32 @@ const dateInput = css`
   width: 358px;
 
   border-radius: 12px;
-  border: 1px solid #fff;
+  border: 1px solid #FFF;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: none;
   -webkit-backdrop-filter: none; /* Safari */
-  z-index: 2;
-  cursor: pointer;
-  color: #fff;
-  font-family: 'IBM Plex Sans', sans-serif;
+  color: #FFF;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 110%;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.50);
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: 110%;
   }
 
-  //&::-webkit-calendar-picker-indicator {
-  //  display: none;
-  //  background-image: url('/images/icon-calendar.svg');
-  //  background-size: 16px;
-  //  background-repeat: no-repeat;
-  //  cursor: pointer;
-  //}
+  ::-webkit-calendar-picker-indicator {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+  }
 
-  //@media screen and (max-width: 382px) {
-  //  
-  //}
-  //@media screen and (min-width: 382px) {
-  //  &::-webkit-calendar-picker-indicator {
-  //    display: none;
-  //  }
-  //}
 `;
-
 
 const timeInput = css`
   display: flex;
@@ -56,20 +43,19 @@ const timeInput = css`
   align-items: center;
   gap: 10px;
 
-  background-image: url('/images/arrow-bottom.svg');
-  //background-size: 5px 9px;
+  background-image: url("/images/arrow-bottom.svg");
   background-repeat: no-repeat;
   background-position-x: 64px;
   background-position-y: center;
 
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-  border: 1px solid #fff;
+  border: 1px solid #FFF;
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px); /* Safari */
 
-  color: #fff;
-  font-family: 'Russo One', sans-serif !important;
+  color: #FFF;
+  font-family: "Russo One", sans-serif !important;
   font-size: 32px;
   font-style: normal;
   font-weight: 400;
@@ -85,19 +71,20 @@ const personInput = css`
   width: 258px;
 
   border-radius: 12px;
-  border: 1px solid #fff;
+  border: 1px solid #FFF;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px); /* Safari */
 
   text-align: center;
 
-  color: #fff;
-  font-family: 'Russo One', sans-serif;
+  color: #FFF;
+  font-family: "Russo One", sans-serif;
   font-size: 32px;
   font-style: normal;
   font-weight: 400;
   line-height: 110%;
+
 `;
 
 const personButton = css`
@@ -107,7 +94,7 @@ const personButton = css`
   justify-content: center;
   align-items: center;
   border-radius: 12px;
-  background: #c0ff3b;
+  background: #C0FF3B;
   backdrop-filter: blur(7px);
 `;
 
@@ -122,39 +109,41 @@ const submitButton = css`
   margin: 0 auto;
 
   border-radius: 16px;
-  background: #c0ff3b;
+  background: #C0FF3B;
 
   color: #000;
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: 110%;
 `;
 
-export const Root = styled.div`
-  //width: 100%;
-  margin: 0 auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 24px;
-  overflow: hidden;
-`;
+export const Root = styled.div
+  `
+    //width: 100%;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 24px;
+    overflow: hidden;
+  `
+;
 
-export const IconCalendar = styled.img`
-  //display: none;
-  position: absolute;
-  display: block;
-  top: 14px;
-  right: 31px;
-  width: 26px;
-  height: 25px;
-  cursor: pointer;
-  appearance: none;
-  z-index: -1;
-`;
+export const IconCalendar = styled.img
+  `
+    position: absolute;
+    display: block;
+    top: 14px;
+    right: 31px;
+    width: 26px;
+    height: 25px;
+    cursor: pointer;
+    appearance: none;
+    z-index: -1;
+  `;
 
 export const Form = styled.form`
   width: 100%;
@@ -164,8 +153,9 @@ export const Form = styled.form`
   align-items: start;
   gap: 24px;
 
-  input[type='date']::-webkit-calendar-picker-indicator {
-    background-image: url('/images/icon-calendar.svg');
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background-image: url("/images/icon-calendar.svg");
     background-size: 24px;
     background-position: 5px;
     margin: 0 15px 0 20px;
@@ -175,8 +165,8 @@ export const Form = styled.form`
   }
 
   span {
-    color: #fff;
-    font-family: 'Russo One', sans-serif;
+    color: #FFF;
+    font-family: "Russo One", sans-serif;
     font-size: 32px;
     font-style: normal;
     font-weight: 400;
@@ -195,14 +185,13 @@ export const Form = styled.form`
 `;
 
 export const Text = styled.p`
-  color: #fff;
-  font-family: 'IBM Plex Sans', sans-serif;
+  color: #FFF;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: ${({ size }) => size || 24}px !important;
   font-weight: 400;
   line-height: 110%;
   text-align: left;
-  text-transform: ${({ isUppercase }) =>
-          isUppercase ? 'uppercase' : 'unset'};
+  text-transform: ${({ isUppercase }) => isUppercase ? 'uppercase' : 'unset'};
 `;
 
 export const Input = styled.input`
@@ -214,106 +203,109 @@ export const Input = styled.input`
   `}
 `;
 
-
 export const Button = styled.button`
   ${({ isButtonPerson }) => isButtonPerson && personButton}
   ${({ isButtonSubmit }) => isButtonSubmit && submitButton}
 `;
 
-export const ColumnHourWrapper = styled.div`
-  padding: 5px 3px;
-  width: 90px;
-  background-color: #1a1a1a;
-  height: 200px;
-  z-index: 132;
-  position: absolute;
-  top: 70px;
-  left: 0;
-  border-radius: 10px;
-  display: none;
-
-  ${({ isOpen }) =>
-          isOpen &&
-          css`
-            display: block !important;
-          `}
-`;
-export const ColumnHour = styled.div`
-  overflow-y: scroll;
-  background-color: #1a1a1a;
-  padding: 12px 24px 12px 16px;
-  height: 195px;
-  border-radius: 10px;
-
-  &::-webkit-scrollbar {
-    width: 5px; /* ширина скроллбара */
-    background-color: #222222; /* цвет фона за скроллбаром */
+export const ColumnHourWrapper = styled.div
+  `
+    padding: 5px 3px;
+    width: 90px;
+    background-color: #1a1a1a;
+    height: 200px;
+    z-index: 132;
+    position: absolute;
+    top: 70px;
+    left: 0;
     border-radius: 10px;
-  }
+    display: none;
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #9b51e0 !important;
+    ${({ isOpen }) => isOpen && css
+            `
+              display: block !important;
+            `
+    }`;
+export const ColumnHour = styled.div
+  `
+    overflow-y: scroll;
+    background-color: #1a1a1a;
+    padding: 12px 24px 12px 16px;
+    height: 195px;
     border-radius: 10px;
-    height: 10px;
-  }
-`;
 
-export const ColumnMinutesWrapper = styled.div`
-  display: none;
-  padding: 5px 3px;
-  width: 90px;
-  background-color: #1a1a1a;
-  height: 200px;
-  z-index: 132;
-  position: absolute;
-  top: 70px;
-  //right: 161px;
-  border-radius: 10px;
+    &::-webkit-scrollbar {
+      width: 5px; /* ширина скроллбара */
+      background-color: #222222; /* цвет фона за скроллбаром */
+      border-radius: 10px;
+    }
 
-  ${({ isOpen }) =>
-          isOpen &&
-          css`
-            display: block !important;
-          `}
-`;
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-export const ColumnMinutes = styled.div`
-  width: 82px;
-  height: 195px;
-  overflow-y: scroll;
-  background-color: #1a1a1a;
-  border-radius: 10px;
-  padding: 12px 24px 12px 16px;
+    &::-webkit-scrollbar-thumb {
+      background-color: #9b51e0 !important;
+      border-radius: 10px;
+      height: 10px;
+    }
+  `;
 
-  &::-webkit-scrollbar {
-    width: 5px;
-    background-color: #222222;
+export const ColumnMinutesWrapper = styled.div
+  `
+    display: none;
+    padding: 5px 3px;
+    width: 90px;
+    background-color: #1a1a1a;
+    height: 200px;
+    z-index: 132;
+    position: absolute;
+    top: 70px;
+    //right: 161px;
     border-radius: 10px;
-  }
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+    ${({ isOpen }) => isOpen && css
+            `
+              display: block !important;
+            `
+    }`;
 
-  &::-webkit-scrollbar-thumb {
-    background-color: #9b51e0 !important;
+export const ColumnMinutes = styled.div
+  `
+    width: 82px;
+    height: 195px;
+    overflow-y: scroll;
+    background-color: #1a1a1a;
     border-radius: 10px;
-    height: 10px;
-  }
-`;
+    padding: 12px 24px 12px 16px;
 
-export const TimeItem = styled.div`
-  color: #fff;
-  font-family: 'Russo One', sans-serif;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 110%;
-`;
+    &::-webkit-scrollbar {
+      width: 5px;
+      background-color: #222222;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #9b51e0 !important;
+      border-radius: 10px;
+      height: 10px;
+    }
+  `;
+
+export const TimeItem = styled.div
+  `
+    color: #FFF;
+    font-family: "Russo One", sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 110%;
+  `;
+
 
 export const CheckBox = styled.div`
   display: flex;
@@ -324,7 +316,7 @@ export const CheckBox = styled.div`
     flex-direction: row-reverse;
   }
 
-  .inputTheme[type='checkbox'] {
+  .inputTheme[type=checkbox] {
     height: 0;
     width: 0;
     visibility: hidden;
@@ -332,7 +324,7 @@ export const CheckBox = styled.div`
   }
 
   .inputTheme:checked + .labelTheme {
-    background: #c0ff3b;
+    background: #C0FF3B;
   }
 
   .inputTheme:checked + .labelTheme:after {
@@ -367,4 +359,5 @@ export const CheckBox = styled.div`
   .labelTheme:active:after {
     width: 30px;
   }
+
 `;
