@@ -75,36 +75,34 @@ const Index = () => {
   };
   useEffect(() => {
 
-    if (!selectedHour && !selectedMinute && !personsValue && !date && !timeTotal) {
-      const timeSaved = localStorage.getItem('time');
-      const personsSaved = localStorage.getItem('persons');
-      const dateSaved = localStorage.getItem('date');
+    const timeSaved = localStorage.getItem('time');
+    const personsSaved = localStorage.getItem('persons');
+    const dateSaved = localStorage.getItem('date');
 
-      if (dateSaved) {
-        const [day, month, year] = dateSaved.split('-');
-        const formattedDate = `${year}-${month}-${day}`;
-        setDate(formattedDate);
+    if (dateSaved) {
+      const [day, month, year] = dateSaved.split('-');
+      const formattedDate = `${year}-${month}-${day}`;
+      setDate(formattedDate);
 
-        setValue('dateValue', formattedDate);
-      }
+      setValue('dateValue', formattedDate);
+    }
 
-      if (timeSaved) {
-        const [hour, minute] = timeSaved.split(':');
-        setSelectedHour(hour);
-        setSelectedMinute(minute);
-      }
+    if (timeSaved) {
+      const [hour, minute] = timeSaved.split(':');
+      setSelectedHour(hour);
+      setSelectedMinute(minute);
+    }
 
-      if (personsSaved) {
-        setPersonsValue(personsSaved);
-        setValue('personsValue', savedValue);
-      }
+    if (personsSaved) {
+      setPersonsValue(parseInt(personsSaved, 10) );
+      setValue('personsValue', parseInt(personsSaved, 10) );
     }
 
   }, [setValue]);
 
 
   const dataSubmit = (data) => {
-    console.log(data.personsValue); // Теперь значение будет актуальным
+    console.log(data.personsValue);
 
     if (!data.personsValue || data.personsValue === '0') {
       setError('personsValue', {
@@ -118,7 +116,6 @@ const Index = () => {
     const reversedDate = `${day}-${month}-${year}`;
     const time = selectedHour + ':' + selectedMinute;
 
-    // console.log(reversedDate);
     if (time && personsValue && reversedDate) {
       localStorage.setItem('time', time);
       localStorage.setItem('persons', personsValue);
