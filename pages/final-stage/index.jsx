@@ -36,9 +36,6 @@ const Index = () => {
   const { name, phone, zone, date, time, address, persons } =
     bookingData;
 
-  function closeApp() {
-    bridge.send('VKWebAppClose', { status: 'success' });
-  }
 
   const handleCloseApp = () => {
     if (bridge) {
@@ -129,7 +126,7 @@ const Index = () => {
           <Text size={20}> {zone} </Text>
         </Container>
 
-        <div onClick={closeApp} style={{
+        <div onClick={handleCloseApp} style={{
           padding: '16px 0 0 0',
           display: 'flex',
           cursor: 'pointer',

@@ -73,6 +73,7 @@ const Index = () => {
       return newValue;
     });
   };
+
   useEffect(() => {
 
     const timeSaved = localStorage.getItem('time');
@@ -254,7 +255,12 @@ const Index = () => {
           <div style={{ display: 'flex', width: '100%', flexDirection: 'column', gap: '8px' }}>
             <Text size={16}>Количество персон</Text>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '7px',
+              maxWidth: '390px',
+            }}>
               <Button isButtonPerson type={'button'} onClick={() => handleMinus()}>
                 <img alt={''}
                      src={'/images/icon-minus.svg'}

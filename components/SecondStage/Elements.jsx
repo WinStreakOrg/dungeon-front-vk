@@ -68,7 +68,8 @@ const personInput = css`
   justify-content: center;
   align-items: center;
   gap: 16px;
-  width: 258px;
+  width: 100%;
+
 
   border-radius: 12px;
   border: 1px solid #FFF;
@@ -89,7 +90,7 @@ const personInput = css`
 
 const personButton = css`
   display: flex;
-  width: 59px;
+  min-width: 59px;
   height: 59px;
   justify-content: center;
   align-items: center;
