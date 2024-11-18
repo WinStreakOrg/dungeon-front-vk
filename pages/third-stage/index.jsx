@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import Stepper from '../../components/ui/Stepper';
 import Head from 'next/head';
 import Image from 'next/image';
+import useReloadPageOnce from '../../hooks/useReloadPageOnce';
 
 
 const Index = () => {
@@ -41,6 +42,8 @@ const Index = () => {
     const address = localStorage.getItem('address');
     setAddress(address);
   }, []);
+
+  useReloadPageOnce();
 
 
   return (
