@@ -4,6 +4,7 @@ import Logo from '../ui/Logo';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
+
 export const Root = styled.div`
   width: 100%;
   height: 100%;
@@ -14,19 +15,18 @@ export const Root = styled.div`
   align-items: start;
   overflow: hidden;
 
-  ${({ displayHeaderOff }) =>
-  displayHeaderOff &&
-  css`
-      display: none;
-    `}
+
+  ${({ displayHeaderOff }) => displayHeaderOff && css`display: none;`}
 `;
 
 const Header = (props) => {
+
   const router = useRouter();
   const [showOffHeader, setShowOffHeader] = useState(true);
 
   useEffect(() => {
     if (router.pathname === '/Loading') {
+
       setShowOffHeader(false);
     }
   }, [showOffHeader]);
@@ -35,15 +35,14 @@ const Header = (props) => {
     <>
       {showOffHeader && (
         <Root displayHeaderOff={props.displayHeaderOff}>
-          <Logo src={'logo.svg'} />
-          {props.winStreak && (
-            <img src="/images/winStreak.svg" alt="" />
-          )}
-        </Root>
-      )}
+          <Logo onClick={() => router.push('/')} src={'logo.svg'} />
+          {props.winStreak && <img src="/images/winStreak.svg" alt="" />}
+        </Root>)
+      }
     </>
   );
 };
+
 
 Header.propTypes = {
   displayHeaderOff: PropTypes.bool,
@@ -51,3 +50,4 @@ Header.propTypes = {
 };
 
 export default Header;
+

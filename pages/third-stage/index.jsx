@@ -63,8 +63,7 @@ const Index = () => {
                      left={110} />
             <Stepper canNavigateForward={isAddressSelected} url={'/third-stage'}
                      id={3} left={220} />
-            <Stepper canNavigateForward={isAddressSelected}
-                     url={'/fourth-stage'} id={4} left={328} />
+            <Stepper canNavigateForward={isAddressSelected} url={'/fourth-stage'} id={4} left={328} />
             <img width={'100%'} alt={''} src={'/images/third-stage.svg'} />
           </div>
 

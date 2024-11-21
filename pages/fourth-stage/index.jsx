@@ -55,11 +55,11 @@ const Index = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
+
   const [isAddressSelected, setIsAddressSelected] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleBlur = () => setIsFocused(true);
   const handleFocus = () => setIsFocused(false);
   const toggleCheckbox = () => setIsChecked(!isChecked);
 
@@ -81,20 +81,28 @@ const Index = () => {
       setHookah(storedHookah);
       setUserName(storedUsername);
     }
-
   }, []);
 
-  const createDeal = async () => {
+  const createDeal = async (contactId) => {
+
+    console.log(contactId);
     if (isValid) {
       setIsLoading(true);
       try {
         const response = await axios.post('/api/createLead', {
-          zone, time, date, comment, address, hookah, persons, nameValue, phoneValue, userName,
+          zone,
+          time,
+          date,
+          comment,
+          hookah,
+          address,
+          persons,
+          nameValue,
+          contactId,
         });
         if (response.status >= 200 && response.status < 300) {
+
           router.push('/final-stage');
-        } else {
-          console.error('Ошибка запроса');
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
@@ -105,17 +113,46 @@ const Index = () => {
       console.error('Имя или телефон не заполнены');
     }
   };
+
+  const createContact = async () => {
+    if (isValid) {
+      setIsLoading(true);
+      try {
+        const response = await axios.post('/api/createContact', {
+          userName,
+          phoneValue,
+          nameValue,
+        });
+        if (response.status >= 200 && response.status < 300) {
+          const id = response.data._embedded.contacts.at(-1)?.id;
+          if (id) {
+            await createDeal(id);
+          }
+        }
+      } catch (error) {
+        console.error('Ошибка:', error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      console.error('Имя или телефон не заполнены');
+    }
+  };
+
   const saveNameToLocalStorage = () => {
     if (nameValue && phoneValue) {
       localStorage.setItem('name', nameValue);
       localStorage.setItem('phone', phoneValue);
       localStorage.setItem('comment', comment);
       setIsAddressSelected(true);
-      createDeal();
+      createContact();
     } else {
       return undefined;
     }
   };
+
+
+
 
   return (
     <>
@@ -205,6 +242,7 @@ const Index = () => {
                 },
               })}
             />
+
             {errors.phoneValue && <ErrorText>{errors.phoneValue.message}</ErrorText>}
           </div>
           <div>

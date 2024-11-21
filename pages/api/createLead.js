@@ -6,65 +6,42 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Метод не разрешен' });
   }
   const {
-    zone,
-    time,
-    userName,
-    comment,
-    date,
-    address,
-    persons,
-    hookah,
-    nameValue,
-    phoneValue,
+    zone, time, // userName,
+    comment, date, address, persons, hookah, nameValue, contactId,
   } = req.body;
 
   const addressEnumId = (() => {
     switch (address) {
       case 'ул. Полевая, 72':
-        return 1208621;
+        return 1276707;
       case 'Московское шоссе, 43':
-        return 1276607;
+        return 1276703;
       case 'ул. Революционная, 155':
-        return 1276609;
-      default:
-        return 1208623;
+        return 1276705;
     }
   })();
 
-
-  if (!addressEnumId) {
-    return res.status(400).json({ error: 'Некорректный адрес' });
-  }
 
   const zoneEnumId = (() => {
     switch (zone) {
       case 'Мягкая зона':
-        return 1207963;
+        return 1276625;
       case 'VIP-зона':
-        return 1207965;
-      default:
-        return 1207967;
+        return 1276627;
     }
   })();
 
-  if (!zoneEnumId) {
-    return res.status(400).json({ error: 'Некорректная зона' });
-  }
 
   const hookahEnumId = (() => {
     switch (hookah) {
       case 'буду':
-        return 1208063;
+        return 1276633;
       case 'не буду':
-        return 1208065;
+        return 1276635;
       default:
-        return 1208067;
+        return 1276635;
     }
   })();
-
-  if (!hookahEnumId) {
-    return res.status(400).json({ error: 'Некорректный кальян' });
-  }
 
   if (!date || !time) {
     return res.status(400).json({ error: 'Дата и время обязательны' });
@@ -77,40 +54,47 @@ export default async function handler(req, res) {
   const formattedDate = new Date(`${formattedDateString}T${time}:00`);
 
   const unixTimestamp = Math.floor(formattedDate.getTime() / 1000);
-  console.log(unixTimestamp);
+
+
+  if (!addressEnumId) {
+    return res.status(400).json({ error: 'Некорректный адрес' });
+  }
+
+  if (!zoneEnumId) {
+    return res.status(400).json({ error: 'Некорректная зона' });
+  }
+  if (!hookahEnumId) {
+    return res.status(400).json({ error: 'Некорректный кальян' });
+  }
 
   try {
     const response = await axios.post(`https://spacetimeceo.amocrm.ru/api/v4/leads`, JSON.stringify([{
-      custom_fields_values: [
+      status_id: 69597318,
+      _embedded: {
+        contacts: [
+          {
+            id: contactId
+          }
+        ]
+      },
+      custom_fields_values: [{
+        field_id: 904521, values: [{ value: unixTimestamp }],
+      }, {
+        field_id: 904513, values: [{ enum_id: addressEnumId }],
+      }, {
+        field_id: 904517, values: [{ value: persons }],
+      }, {
+        field_id: 904525, values: [{ enum_id: hookahEnumId }],
+      }, { //vk source
+        field_id: 904511, values: [{ enum_id: 1276617 }],
+      }, {
+        field_id: 904529, values: [{ value: nameValue }],
+      },
         {
-          field_id: 797209, values: [{ value: unixTimestamp }],
+          field_id: 904515, values: [{ enum_id: zoneEnumId }],
         },
         {
-          field_id: 798543, values: [{ enum_id: addressEnumId }],
-        },
-        {
-          field_id: 797157, values: [{ value: persons }],
-        },
-        {
-          field_id: 797217, values: [{ enum_id: hookahEnumId }],
-        },
-        {
-          field_id: 904491, values: [{ value: 'Сделка пришла из Вк' }],
-        },
-        {
-          field_id: 797213, values: [{ value: nameValue }],
-        },
-        {
-          field_id: 904489, values: [{ value: phoneValue }],
-        },
-        {
-          field_id: 797155, values: [{ enum_id: zoneEnumId }],
-        },
-        {
-          field_id: 904487, values: [{ value: userName || 'не указан' }],
-        },
-        {
-          field_id: 797211, values: [{ value: comment }],
+          field_id: 904523, values: [{ value: comment }],
         }],
     }]), {
       headers: {
@@ -118,14 +102,9 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
     });
-
     res.status(200).json(response.data);
   } catch (error) {
     console.log(error);
-    console.error(
-      'Ошибка при создании сделки:',
-      error.response.data['validation-errors'][0].errors,
-    );
     res.status(500).json({ error: 'Ошибка сервера' });
   }
 }
@@ -166,3 +145,18 @@ export default async function handler(req, res) {
 //   {
 //     field_id: 797211, values: [{ value: comment }],
 //   }],
+
+//
+// {
+//   "field_id": 797033,
+//   "field_name": "Телефон",
+//   "field_code": "PHONE",
+//   "field_type": "multitext",
+//   "values": [
+//   {
+//     "value": "234298423423",
+//     "enum_id": 1207927,
+//     "enum_code": "WORK"
+//   }
+// ]
+// },
