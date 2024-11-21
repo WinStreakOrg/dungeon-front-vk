@@ -146,6 +146,8 @@ const Index = () => {
     trigger('minuteValue');
   };
 
+  const today = new Date().toISOString().split('T')[0];
+
 
   return (
     <>
@@ -172,6 +174,7 @@ const Index = () => {
               <div style={{ position: 'relative', width: 'fit-content' }}>
                 <Input isDateInput
                        type={'date'}
+                       min={today}
                        isNotValid={errors?.dateValue}
                        value={date || ''}
                        {...register('dateValue', {

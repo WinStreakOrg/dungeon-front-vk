@@ -51,7 +51,7 @@ const Index = () => {
   const [hookah, setHookah] = useState(false);
   const [userName, setUserName] = useState('');
   const [nameValue, setNameValue] = useState('');
-  const [phoneValue, setPhoneValue] = useState('');
+  const [phoneValue, setPhoneValue] = useState('+7');
   const [isFocused, setIsFocused] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
@@ -152,7 +152,33 @@ const Index = () => {
   };
 
 
+  const formatPhoneNumber = (value) => {
+    const cleaned = value.replace(/\D/g, '').slice(1);
 
+    const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+    if (match) {
+      return `+7 ${match[1]}${match[2] ? ` ${match[2]}` : ''}${match[3] ? ` ${match[3]}` : ''}${match[4] ? ` ${match[4]}` : ''}`;
+    }
+
+    return '+7 ';
+  };
+
+
+  const handlePhoneChange = (e) => {
+    let inputValue = e.target.value;
+    const maxLength = 16;
+
+    if (inputValue.length > maxLength) {
+      inputValue = inputValue.slice(0, maxLength);
+    }
+
+    if (!inputValue.startsWith('+7')) {
+      return;
+    }
+
+    const formattedValue = formatPhoneNumber(inputValue);
+    setPhoneValue(formattedValue);
+  };
 
   return (
     <>
@@ -206,43 +232,15 @@ const Index = () => {
               Контактный телефон
             </Text>
             <Input
-              placeholder={'+7'}
+              placeholder="+7"
               value={phoneValue}
               isNotValid={errors.phoneValue}
-              type={'tel'}
-              onFocus={handleFocus}
               isPhoneInput
               {...register('phoneValue', {
                 required: 'Это обязательное поле',
-                onBlur: () => setIsFocused(true),
-                onChange: (e) => {
-                  let inputValue = e.target.value.replace(/\D/g, '');
-
-                  if (inputValue.startsWith('8')) {
-                    inputValue = '7' + inputValue.slice(1);
-                  }
-                  if (!inputValue.startsWith('7')) {
-                    inputValue = '7' + inputValue;
-                  }
-
-                  const part1 = inputValue.slice(1, 4);
-                  const part2 = inputValue.slice(4, 7);
-                  const part3 = inputValue.slice(7, 9);
-                  const part4 = inputValue.slice(9, 11);
-
-                  let formattedValue = `+7`;
-
-                  if (part1) formattedValue += `-(${part1}`;
-                  if (part1 && inputValue.length >= 4) formattedValue += `)`;
-                  if (part2) formattedValue += `-${part2}`;
-                  if (part3) formattedValue += `-${part3}`;
-                  if (part4) formattedValue += `-${part4}`;
-
-                  setPhoneValue(formattedValue);
-                },
+                onChange: handlePhoneChange,
               })}
             />
-
             {errors.phoneValue && <ErrorText>{errors.phoneValue.message}</ErrorText>}
           </div>
           <div>

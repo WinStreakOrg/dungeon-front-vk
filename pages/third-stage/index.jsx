@@ -37,13 +37,10 @@ const Index = () => {
       router.push('/fourth-stage');
     }
   };
+  useReloadPageOnce();
 
   useEffect(() => {
     const address = localStorage.getItem('address');
-    if (address){
-      useReloadPageOnce();
-
-    }
     setAddress(address);
   }, []);
 
