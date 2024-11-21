@@ -40,10 +40,13 @@ const Index = () => {
 
   useEffect(() => {
     const address = localStorage.getItem('address');
+    if (address){
+      useReloadPageOnce();
+
+    }
     setAddress(address);
   }, []);
 
-  useReloadPageOnce();
 
 
   return (
