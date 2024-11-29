@@ -20,6 +20,7 @@ import { useForm } from 'react-hook-form';
 import Stepper from '../../components/ui/Stepper';
 import Head from 'next/head';
 import { ErrorText } from '../../components/ui/ErrorText';
+import bridge from '@vkontakte/vk-bridge';
 
 
 const Index = () => {
