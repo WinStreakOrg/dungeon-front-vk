@@ -148,6 +148,24 @@ const Index = () => {
 
   const today = new Date().toISOString().split('T')[0];
 
+  const validateDate = (selectedDate) => {
+    if (!selectedDate) {
+      setError('dateValue', {
+        type: 'required',
+        message: 'Это обязательное поле',
+      });
+      return false;
+    }
+    if (selectedDate < today) {
+      setError('dateValue', {
+        type: 'validate',
+        message: 'Нельзя забронировать на прошедшую дату. Выберите актуальную дату',
+      });
+      return false;
+    }
+    clearErrors('dateValue');
+    return true;
+  };
 
   return (
     <>
@@ -179,8 +197,12 @@ const Index = () => {
                        value={date || ''}
                        {...register('dateValue', {
                          required: 'Это обязательное поле',
-                         onChange: (e) => setDate(e.target.value),
                        })}
+                       onChange={(e) => {
+                         const selectedDate = e.target.value;
+                         setDate(selectedDate);
+                         validateDate(selectedDate);
+                       }}
                 />
                 <IconCalendar src="/images/icon-calendar.svg" alt="" />
               </div>
