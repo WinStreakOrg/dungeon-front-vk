@@ -38,6 +38,7 @@ const Index = () => {
       isValid,
     },
     setError,
+    clearErrors,
     trigger,
     // resetField,
   } = useForm({
