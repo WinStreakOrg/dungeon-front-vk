@@ -20,7 +20,6 @@ import { useForm } from 'react-hook-form';
 import Stepper from '../../components/ui/Stepper';
 import Head from 'next/head';
 import { ErrorText } from '../../components/ui/ErrorText';
-import bridge from '@vkontakte/vk-bridge';
 
 
 const Index = () => {
@@ -54,7 +53,7 @@ const Index = () => {
   const [phoneValue, setPhoneValue] = useState('+7');
   const [isChecked, setIsChecked] = useState(false);
 
-  const [vkUserId, setVkUserId] = useState('');
+  const [vkUserId, setVkUserId] = useState('393969629');
 
 
   const [isAddressSelected, setIsAddressSelected] = useState(false);
@@ -91,60 +90,6 @@ const Index = () => {
   }, []);
 
   console.log(vkUserId);
-  // const updateDeal = async (leadId) => {
-  //
-  //   if (isValid) {
-  //     setIsLoading(true);
-  //     try {
-  //       const response = await axios.post('/api/createLead', {
-  //         zone,
-  //         time,
-  //         date,
-  //         comment,
-  //         hookah,
-  //         address,
-  //         persons,
-  //         nameValue,
-  //         leadId,
-  //       });
-  //       if (response.status >= 200 && response.status < 300) {
-  //         router.push('/final-stage');
-  //       }
-  //     } catch (error) {
-  //       console.error('Ошибка:', error.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   } else {
-  //     console.error('Имя или телефон не заполнены');
-  //   }
-  // };
-
-  // const createContact = async () => {
-  //   if (isValid) {
-  //     setIsLoading(true);
-  //     try {
-  //       const response = await axios.post('/api/createContact', {
-  //         userName,
-  //         phoneValue,
-  //         nameValue,
-  //       });
-  //       if (response.status >= 200 && response.status < 300) {
-  //         const id = response.data._embedded.contacts.at(-1)?.id;
-  //         if (id) {
-  //           await updateDeal(id);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error('Ошибка:', error.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   } else {
-  //     console.error('Имя или телефон не заполнены');
-  //   }
-  // };
-
 
   const createContact = async (contactId) => {
     if (contactId) {
@@ -185,7 +130,6 @@ const Index = () => {
     }
   };
 
-
   const getLeadId = async (contactId) => {
     if (contactId) {
       try {
@@ -211,11 +155,11 @@ const Index = () => {
       try {
         const response = await axios.get(`/api/getContacts`, {
           params: {
-            vkId: vkId,
+            vkId: vkUserId,
           },
         });
         const { contactId, vkId } = response.data;
-        if (vkUserId == vkId) {
+        if (vkUserId === vkId) {
           createContact(contactId);
           getLeadId(contactId);
         }
