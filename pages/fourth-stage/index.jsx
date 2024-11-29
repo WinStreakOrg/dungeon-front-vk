@@ -54,7 +54,7 @@ const Index = () => {
   const [phoneValue, setPhoneValue] = useState('+7');
   const [isChecked, setIsChecked] = useState(false);
 
-  const [vkUserId, setVkUserId] = useState('393969629');
+  const [vkUserId, setVkUserId] = useState('');
 
 
   const [isAddressSelected, setIsAddressSelected] = useState(false);
@@ -152,7 +152,7 @@ const Index = () => {
 
   const getContacts = async () => {
     setIsLoading(true);
-    if (vkUserId) {
+    // if (vkUserId) {///
       try {
         const response = await axios.get(`/api/getContacts`, {
           params: {
@@ -160,13 +160,13 @@ const Index = () => {
           },
         });
         const { contactId, vkId } = response.data;
-        if (vkUserId === vkId) {
+        if (vkUserId == vkId) {
           createContact(contactId);
           getLeadId(contactId);
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
-      }
+      // }
     }
   };
 
