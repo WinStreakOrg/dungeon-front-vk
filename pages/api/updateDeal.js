@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await axios.patch(`https://spacetimeceo.amocrm.ru/api/v4/leads`, JSON.stringify({
-      status_id: contactId,
+      id: contactId,
       custom_fields_values: [{
         field_id: 904521, values: [{ value: unixTimestamp }],
       }, {
