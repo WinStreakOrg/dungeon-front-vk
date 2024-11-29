@@ -20,6 +20,7 @@ import { useForm } from 'react-hook-form';
 import Stepper from '../../components/ui/Stepper';
 import Head from 'next/head';
 import { ErrorText } from '../../components/ui/ErrorText';
+import bridge from '@vkontakte/vk-bridge';
 
 
 const Index = () => {
@@ -49,18 +50,17 @@ const Index = () => {
   const [persons, setPersons] = useState('');
   const [comment, setComment] = useState('');
   const [hookah, setHookah] = useState(false);
-  const [userName, setUserName] = useState('');
   const [nameValue, setNameValue] = useState('');
   const [phoneValue, setPhoneValue] = useState('+7');
-  const [isFocused, setIsFocused] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  const [vkUserId, setVkUserId] = useState('');
 
 
   const [isAddressSelected, setIsAddressSelected] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleFocus = () => setIsFocused(false);
   const toggleCheckbox = () => setIsChecked(!isChecked);
 
   useEffect(() => {
@@ -70,7 +70,6 @@ const Index = () => {
     const storedAddress = localStorage.getItem('address');
     const storedPersons = localStorage.getItem('persons');
     const storedHookah = localStorage.getItem('hookah');
-    const storedUsername = localStorage.getItem('username');
 
     if (storedZone && storedTime && storedDate && storedAddress && storedPersons) {
       setZone(storedZone);
@@ -79,17 +78,91 @@ const Index = () => {
       setAddress(storedAddress);
       setPersons(storedPersons);
       setHookah(storedHookah);
-      setUserName(storedUsername);
     }
   }, []);
 
-  const createDeal = async (contactId) => {
+  useEffect(() => {
+    bridge.send('VKWebAppGetUserInfo').then((data) => {
+      setVkUserId(data.id);
+    })
+      .catch((error) => {
+        console.error('Ошибка получения ID пользователя:', error);
+      });
+  }, []);
 
-    console.log(contactId);
+  console.log(vkUserId);
+  // const updateDeal = async (leadId) => {
+  //
+  //   if (isValid) {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await axios.post('/api/createLead', {
+  //         zone,
+  //         time,
+  //         date,
+  //         comment,
+  //         hookah,
+  //         address,
+  //         persons,
+  //         nameValue,
+  //         leadId,
+  //       });
+  //       if (response.status >= 200 && response.status < 300) {
+  //         router.push('/final-stage');
+  //       }
+  //     } catch (error) {
+  //       console.error('Ошибка:', error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   } else {
+  //     console.error('Имя или телефон не заполнены');
+  //   }
+  // };
+
+  // const createContact = async () => {
+  //   if (isValid) {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await axios.post('/api/createContact', {
+  //         userName,
+  //         phoneValue,
+  //         nameValue,
+  //       });
+  //       if (response.status >= 200 && response.status < 300) {
+  //         const id = response.data._embedded.contacts.at(-1)?.id;
+  //         if (id) {
+  //           await updateDeal(id);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error('Ошибка:', error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   } else {
+  //     console.error('Имя или телефон не заполнены');
+  //   }
+  // };
+
+
+  const createContact = async (contactId) => {
+    if (contactId) {
+      try {
+        const response = await axios.patch(`/api/createContact/`, {
+          phoneValue, contactId,
+        });
+      } catch (error) {
+        console.error('Ошибка:', error.message);
+      }
+    }
+  };
+
+  const updateDeal = async (leadId) => {
     if (isValid) {
       setIsLoading(true);
       try {
-        const response = await axios.post('/api/createLead', {
+        const response = await axios.patch(`/api/updateDeal/`, {
           zone,
           time,
           date,
@@ -98,44 +171,57 @@ const Index = () => {
           address,
           persons,
           nameValue,
-          contactId,
+          leadId,
         });
         if (response.status >= 200 && response.status < 300) {
-
           router.push('/final-stage');
         }
+
       } catch (error) {
         console.error('Ошибка:', error.message);
-      } finally {
-        setIsLoading(false);
       }
     } else {
       console.error('Имя или телефон не заполнены');
     }
   };
 
-  const createContact = async () => {
-    if (isValid) {
-      setIsLoading(true);
+
+  const getLeadId = async (contactId) => {
+    if (contactId) {
       try {
-        const response = await axios.post('/api/createContact', {
-          userName,
-          phoneValue,
-          nameValue,
+        const response = await axios.get(`/api/getLeadId`, {
+          params: { contactId },
         });
-        if (response.status >= 200 && response.status < 300) {
-          const id = response.data._embedded.contacts.at(-1)?.id;
-          if (id) {
-            await createDeal(id);
-          }
+        if (response.data) {
+          const { leadId } = response.data;
+          updateDeal(leadId, contactId);
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
-      } finally {
-        setIsLoading(false);
       }
     } else {
-      console.error('Имя или телефон не заполнены');
+      console.log('contactId не найдем');
+    }
+  };
+
+
+  const getContacts = async () => {
+    setIsLoading(true);
+    if (vkUserId) {
+      try {
+        const response = await axios.get(`/api/getContacts`, {
+          params: {
+            vkId: vkId,
+          },
+        });
+        const { contactId, vkId } = response.data;
+        if (vkUserId == vkId) {
+          createContact(contactId);
+          getLeadId(contactId);
+        }
+      } catch (error) {
+        console.error('Ошибка:', error.message);
+      }
     }
   };
 
@@ -145,7 +231,7 @@ const Index = () => {
       localStorage.setItem('phone', phoneValue);
       localStorage.setItem('comment', comment);
       setIsAddressSelected(true);
-      createContact();
+      getContacts();
     } else {
       return undefined;
     }
@@ -193,10 +279,14 @@ const Index = () => {
 
         <div style={{ position: 'relative', width: '358px', height: '28px' }}>
           <Stepper canNavigateForward={true} url={'/'} id={1} left={0} />
-          <Stepper canNavigateForward={true} url={'/Second'} id={2} left={110} />
-          <Stepper canNavigateForward={true} url={'/third-stage'} id={3} left={220} />
-          <Stepper canNavigateForward={isAddressSelected} url={'/fourth-stage'} id={4} left={328} />
-          <Image alt={''} src={'/images/FourthStage.svg'} width={358} height={28} />
+          <Stepper canNavigateForward={true} url={'/Second'} id={2}
+                   left={110} />
+          <Stepper canNavigateForward={true} url={'/third-stage'} id={3}
+                   left={220} />
+          <Stepper canNavigateForward={isAddressSelected} url={'/fourth-stage'}
+                   id={4} left={328} />
+          <Image alt={''} src={'/images/FourthStage.svg'} width={358}
+                 height={28} />
         </div>
 
         <Container>
@@ -208,7 +298,8 @@ const Index = () => {
             <img src="/images/point.svg" alt="" />
             <Text size={20}> {time || 'не указан'} </Text>
           </div>
-          <Text size={20}> {zone || 'не указн'} {hookah ? '+ Кальян' : 'не указан'} </Text>
+          <Text
+            size={20}> {zone || 'не указн'} {hookah ? '+ Кальян' : 'не указан'} </Text>
         </Container>
 
         <form onSubmit={handleSubmit(saveNameToLocalStorage)}>
@@ -222,10 +313,12 @@ const Index = () => {
                    isNotValid={errors.nameValue}
                    isNameInput
                    {...register('nameValue', {
-                     required: 'Это обязательное поле', onChange: (e) => setNameValue(e.target.value),
+                     required: 'Это обязательное поле',
+                     onChange: (e) => setNameValue(e.target.value),
                    })}
             />
-            {errors.nameValue && <ErrorText>{errors.nameValue.message}</ErrorText>}
+            {errors.nameValue &&
+              <ErrorText>{errors.nameValue.message}</ErrorText>}
           </div>
           <div>
             <Text size={16}>
@@ -241,7 +334,8 @@ const Index = () => {
                 onChange: handlePhoneChange,
               })}
             />
-            {errors.phoneValue && <ErrorText>{errors.phoneValue.message}</ErrorText>}
+            {errors.phoneValue &&
+              <ErrorText>{errors.phoneValue.message}</ErrorText>}
           </div>
           <div>
             <Text size={16}>
@@ -262,15 +356,19 @@ const Index = () => {
                                   onChange: () => toggleCheckbox(),
                                 })}
                 />
-                <CustomCheckbox isNotValid={errors.checkBox} checked={isChecked} />
+                <CustomCheckbox isNotValid={errors.checkBox}
+                                checked={isChecked} />
               </CheckboxContainer>
 
-              <Text onClick={() => router.push('/personal-data')} width={'330'} size={16}>
-                Даю подтверждение на <CustomText color> обработку персональных данных.</CustomText>
+              <Text onClick={() => router.push('/personal-data')} width={'330'}
+                    size={16}>
+                Даю подтверждение на <CustomText color> обработку персональных
+                данных.</CustomText>
               </Text>
             </div>
             <div style={{ paddingLeft: '25px' }}>
-              {errors.checkBox && <ErrorText>{errors.checkBox.message}</ErrorText>}
+              {errors.checkBox &&
+                <ErrorText>{errors.checkBox.message}</ErrorText>}
             </div>
 
           </div>
@@ -288,7 +386,8 @@ const Index = () => {
           </Button>
         </form>
 
-        <BackGround height={289} width={176} bottom={47} left={197} src={'/images/smoke-1.png'} />
+        <BackGround height={289} width={176} bottom={47} left={197}
+                    src={'/images/smoke-1.png'} />
         <BackGround bottom={231} left={0} src={'/images/controller.png'} />
       </Root>
     </>
