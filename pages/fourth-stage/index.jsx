@@ -119,7 +119,7 @@ const Index = () => {
           nameValue,
           leadId,
         });
-        if (response.status >= 200 && response.status < 300) {
+        if (response.data) {
           router.push('/final-stage');
         }
 
@@ -139,7 +139,7 @@ const Index = () => {
         });
         if (response.data) {
           const { leadId } = response.data;
-          updateDeal(leadId, contactId);
+          updateDeal(leadId);
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
