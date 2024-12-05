@@ -48,7 +48,7 @@ const Index = () => {
   const [selectedHourMenu, setSelectedHourMenu] = useState(false);
   const [selectedMinuteMenu, setSelectedMinuteMenu] = useState(false);
 
-  const [selectedHour, setSelectedHour] = useState('12');
+  const [selectedHour, setSelectedHour] = useState('14');
   const [selectedMinute, setSelectedMinute] = useState('00');
   const [personsValue, setPersonsValue] = useState(0);
   const [date, setDate] = useState('');

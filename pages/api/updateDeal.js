@@ -52,12 +52,13 @@ export default async function handler(req, res) {
   }
 
   const [day, month, year] = date.split('-');
-
   const formattedDateString = `${year}-${month}-${day}`;
 
-  const formattedDate = new Date(`${formattedDateString}T${time}:00`);
+  const localDate = new Date(`${formattedDateString}T${time}:00`);
 
-  const unixTimestamp = Math.floor(formattedDate.getTime() / 1000);
+  const adjustedDate = new Date(localDate.getTime() - 3600000);
+
+  const adjustedTimestamp = Math.floor(adjustedDate.getTime() / 1000);
 
   if (!addressEnumId) {
     return res.status(400).json({ error: 'Некорректный адрес' });
@@ -74,11 +75,12 @@ export default async function handler(req, res) {
     const response = await axios.patch(
       `https://dungeonbron.amocrm.ru/api/v4/leads/${leadId}`,
       JSON.stringify({
+        status_id: 45786115,
         id: leadId,
         custom_fields_values: [
           {
             field_id: 274879,
-            values: [{ value: unixTimestamp }],
+            values: [{ value: adjustedTimestamp }],
           },
           {
             field_id: 276195,
@@ -108,7 +110,7 @@ export default async function handler(req, res) {
       }),
       {
         headers: {
-          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjkzOWNjM2E3OWIyM2M4MjczYTg0ZjZkNmVjZjMwMWE4ZWI5YjE2ZDYwY2NjZTFiY2Y1MzM1NDJmNmJjMmU3NGNiYjIwY2RjZDNiOGVhZDUyIn0.eyJhdWQiOiIzYjNlNGNmZS1mZGFlLTRlNGQtOWZhNC00ODY4ZmVlZWFkMDMiLCJqdGkiOiI5MzljYzNhNzliMjNjODI3M2E4NGY2ZDZlY2YzMDFhOGViOWIxNmQ2MGNjY2UxYmNmNTMzNTQyZjZiYzJlNzRjYmIyMGNkY2QzYjhlYWQ1MiIsImlhdCI6MTczMzEwNTA4OSwibmJmIjoxNzMzMTA1MDg5LCJleHAiOjE4ODc3NTM2MDAsInN1YiI6Ijc4NTkyNjAiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6Mjk5NjY4MDMsImJhc2VfZG9tYWluIjoiYW1vY3JtLnJ1IiwidmVyc2lvbiI6Miwic2NvcGVzIjpbImNybSIsImZpbGVzIiwiZmlsZXNfZGVsZXRlIiwibm90aWZpY2F0aW9ucyIsInB1c2hfbm90aWZpY2F0aW9ucyJdLCJoYXNoX3V1aWQiOiI4ZGI0NDM1Ny00OGU1LTQ2NWQtOWY4OS00MWQ5MjA0ZjU1Y2YiLCJhcGlfZG9tYWluIjoiYXBpLWIuYW1vY3JtLnJ1In0.TQ5oaojz6iCKSLcVWPNgFCv4nT2uVyTHDrNPn7obku5_B0iP0k-C4va7NztuiQZl9EW160he-rYQho1q83pOBj59u2ag630BHNSf0gYRmDS5WuR4bf7uSgsQMfyetQj2zSc86syFOshPQUhq9HNOIU8SKhzHnpxy3EzLQuyCe2jRCPL5PR4qBL5U0yPWo8EAi60i_82Thv0CnHaimbwRWzTXKD60AUGY97plFOpqdHmAKfKD0eh2gTpjUeHe4gUkUeWxXP1bI5PxQMgSlLN8uxoc3m7q0iGvCHV06Djxi-VwnDZFsFdNu58Qvl_8JXPFEIxYGj2eoePnnve_7ClLeg`,
+          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjlmMDIzYzY2ZmUxNjE1N2JmZTZiMGY1YzA1ZDdiZTE3YTY1OWQwYWJhZmJmODJmYTc0NWM0Yzg4OTk1OWJkYzNmMzViMzA4ZTc2NmU3OWY3In0.eyJhdWQiOiIzYjNlNGNmZS1mZGFlLTRlNGQtOWZhNC00ODY4ZmVlZWFkMDMiLCJqdGkiOiI5ZjAyM2M2NmZlMTYxNTdiZmU2YjBmNWMwNWQ3YmUxN2E2NTlkMGFiYWZiZjgyZmE3NDVjNGM4ODk5NTliZGMzZjM1YjMwOGU3NjZlNzlmNyIsImlhdCI6MTczMzIxMTcxNCwibmJmIjoxNzMzMjExNzE0LCJleHAiOjE4OTA2OTEyMDAsInN1YiI6Ijc4NTkyNjAiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6Mjk5NjY4MDMsImJhc2VfZG9tYWluIjoiYW1vY3JtLnJ1IiwidmVyc2lvbiI6Miwic2NvcGVzIjpbImNybSIsImZpbGVzIiwiZmlsZXNfZGVsZXRlIiwibm90aWZpY2F0aW9ucyIsInB1c2hfbm90aWZpY2F0aW9ucyJdLCJoYXNoX3V1aWQiOiIxNzUwYWJjYS1lNGMxLTQ4NTgtYmM1ZS1kOTk1YjI1ODQ0NmYiLCJhcGlfZG9tYWluIjoiYXBpLWIuYW1vY3JtLnJ1In0.ZxqQ_vI1yi7RBiFx_a0Bn-mHVv0d2Vn1vTo-CH13qcXbVC-wBvE1Kh-FtWMpYSk4h3Gf9sHsO_Lkbpua_R_lGNnwt8Y_zkbYBo2AFzGDieY_l8Lwp_3K2ILvUgUGqohJ06k1kk3iYmG7d8HF26YjcjREubY0kTvykqZU-H3XTXu1BSmDntuxlI6ZfoWIYBXB--X9Aia-bYhUcmogS3wf54f-hEzlBxw_nmMBgrPMsWiRo19yBzdT7cKayZfPIQ86nszupBUG4Zwc1xg137AhhUVEnPQXneiBiMQIPZSq9wjfma3L2hil4QrWGu_LCBstTQjBE5_D3OTA-N4pN33C9w`,
           'Content-Type': 'application/json',
         },
       }
