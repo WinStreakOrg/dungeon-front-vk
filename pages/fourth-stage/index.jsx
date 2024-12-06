@@ -31,7 +31,7 @@ const Index = () => {
   const {
     register,
     handleSubmit,
-    setValue,
+    // setValue,
     // setError,
     formState: {
       errors,
@@ -90,7 +90,6 @@ const Index = () => {
       });
   }, []);
 
-  console.log(vkUserId);
 
   const createContact = async (contactId) => {
     if (contactId) {
@@ -139,7 +138,7 @@ const Index = () => {
         });
         if (response.data) {
           const { leadId } = response.data;
-          updateDeal(leadId);
+          await updateDeal(leadId);
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
@@ -152,7 +151,7 @@ const Index = () => {
 
   const getContacts = async () => {
     setIsLoading(true);
-    // if (vkUserId) {///
+    if (vkUserId) {
       try {
         const response = await axios.get(`/api/getContacts`, {
           params: {
@@ -161,12 +160,12 @@ const Index = () => {
         });
         const { contactId, vkId } = response.data;
         if (vkUserId == vkId) {
-          createContact(contactId);
-          getLeadId(contactId);
+          await createContact(contactId);
+          await getLeadId(contactId);
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
-      // }
+      }
     }
   };
 

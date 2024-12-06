@@ -8,7 +8,6 @@ import {
   Text,
 } from '../../components/final-stage/Elements';
 import bridge from '@vkontakte/vk-bridge';
-import { useRouter } from 'next/router';
 
 const Index = () => {
   const [bookingData, setBookingData] = useState({
@@ -20,7 +19,6 @@ const Index = () => {
     address: '',
     persons: '',
   });
-  const router = useRouter();
 
   useEffect(() => {
     const data = {
@@ -39,7 +37,7 @@ const Index = () => {
     bookingData;
 
 
-  const handleCloseApp = async () => {
+  const handleCloseApp = () => {
     if (bridge) {
       localStorage.removeItem('time');
       localStorage.removeItem('persons');
@@ -50,9 +48,9 @@ const Index = () => {
       localStorage.removeItem('zone');
       localStorage.removeItem('username');
       localStorage.removeItem('address');
-      await router.push("https://vk.com/im")
+      // await bridge.send('VKWebAppClose', { status: 'success' });
+      window.location.href = 'https://vk.com/im?sel=-183884616';
 
-      await bridge.send('VKWebAppClose', { status: 'success' });
     } else {
       console.warn('Telegram WebApp API не доступен.');
     }
@@ -139,14 +137,14 @@ const Index = () => {
         >
           <Text size={12}>
             Остались вопросы?
-            <CustomText size={"12"} color>
+            <CustomText size={'12'} color>
               {' '}
               Мы с удовольствием на них ответим!
             </CustomText>
           </Text>
           <Text size={12}>
             Изменить информацию о бронировании?
-            <CustomText size={"12"} color>
+            <CustomText size={'12'} color>
               {' '}
               Напишите нам!
             </CustomText>

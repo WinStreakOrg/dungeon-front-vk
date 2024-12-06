@@ -2,9 +2,8 @@ import { BackGround } from '../components/ui/BackGround';
 import { Button, Root, Text } from '../components/FirstStage/Elements';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Stepper from '../components/ui/Stepper';
-import bridge from '@vkontakte/vk-bridge';
 
 const addresses = ['ул. Революционная, 155', 'ул. Полевая, 72', 'Московское шоссе, 43'];
 
@@ -17,22 +16,6 @@ export default function Home() {
     localStorage.setItem('address', item);
     setIsAddressSelected(true);
   }
-
-
-  async function getUserName() {
-    try {
-      const userInfo = await bridge.send('VKWebAppGetUserInfo');
-      const userName = `${userInfo.first_name} ${userInfo.last_name}`;
-      localStorage.setItem('userName', userName);
-    } catch (error) {
-      console.error('Failed to get user info:', error);
-      return null;
-    }
-  }
-
-  useEffect(() => {
-    getUserName();
-  }, []);
 
   const BranchButton = ({ address, onClick, isFocused }) => (
     <Button onClick={onClick} isFocused={isFocused}>
