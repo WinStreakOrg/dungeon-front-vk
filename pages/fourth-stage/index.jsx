@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   CheckboxContainer,
@@ -11,16 +11,16 @@ import {
   Root,
   Text,
 } from '../../components/FourthStage/Elements';
-import CustomText from '../../components/ui/CustomText';
 import axios from 'axios';
-import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Image from 'next/image';
-import { BackGround } from '../../components/ui/BackGround';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import Stepper from '../../components/ui/Stepper';
-import Head from 'next/head';
+import CustomText from '../../components/ui/CustomText';
 import { ErrorText } from '../../components/ui/ErrorText';
-import bridge from '@vkontakte/vk-bridge';
+import { BackGround } from '../../components/ui/BackGround';
+import { ContactContext } from '../../context/ContactContext';
 
 
 const Index = () => {
@@ -54,14 +54,22 @@ const Index = () => {
   const [phoneValue, setPhoneValue] = useState('+7');
   const [isChecked, setIsChecked] = useState(false);
 
-  const [vkUserId, setVkUserId] = useState('');
-
+  // const [vkUserId, setVkUserId] = useState('');
 
   const [isAddressSelected, setIsAddressSelected] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const toggleCheckbox = () => setIsChecked(!isChecked);
+
+  const [contactId, setContactId] = useState('');
+
+  useEffect(() => {
+    const storedContactId = localStorage.getItem('contactId');
+
+    setContactId(storedContactId);
+  }, []);
+
 
   useEffect(() => {
     const storedZone = localStorage.getItem('zone');
@@ -81,14 +89,14 @@ const Index = () => {
     }
   }, []);
 
-  useEffect(() => {
-    bridge.send('VKWebAppGetUserInfo').then((data) => {
-      setVkUserId(data.id);
-    })
-      .catch((error) => {
-        console.error('Ошибка получения ID пользователя:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   bridge.send('VKWebAppGetUserInfo').then((data) => {
+  //     setVkUserId(data.id);
+  //   })
+  //     .catch((error) => {
+  //       console.error('Ошибка получения ID пользователя:', error);
+  //     });
+  // }, []);
 
 
   const createContact = async (contactId) => {
@@ -139,6 +147,7 @@ const Index = () => {
         if (response.data) {
           const { leadId } = response.data;
           await updateDeal(leadId);
+          await createContact(contactId);
         }
       } catch (error) {
         console.error('Ошибка:', error.message);
@@ -148,38 +157,67 @@ const Index = () => {
     }
   };
 
+  const [isDataReady, setIsDataReady] = useState(false);
 
-  const getContacts = async () => {
-    setIsLoading(true);
-    if (vkUserId) {
-      try {
-        const response = await axios.get(`/api/getContacts`, {
-          params: {
-            vkId: vkUserId,
-          },
-        });
-        const { contactId, vkId } = response.data;
-        if (vkUserId == vkId) {
-          await createContact(contactId);
-          await getLeadId(contactId);
-        }
-      } catch (error) {
-        console.error('Ошибка:', error.message);
-      }
-    }
-  };
+  const { isContactLoaded } = useContext(ContactContext);
+
+
+  // const getContacts = async () => {
+  //   setIsLoading(true);
+  //   if (vkUserId) {
+  //     try {
+  //       const response = await axios.get(`/api/getContacts`, {
+  //         params: {
+  //           vkId: vkUserId,
+  //         },
+  //       });
+  //       const { contactId, vkId } = response.data;
+  //       if (vkUserId == vkId) {
+  //         await createContact(contactId);
+  //         await getLeadId(contactId);
+  //       }
+  //     } catch (error) {
+  //       console.error('Ошибка:', error.message);
+  //     }
+  //   }
+  // };
+  //
+  // const saveNameToLocalStorage = () => {
+  //   if (nameValue && phoneValue) {
+  //     localStorage.setItem('name', nameValue);
+  //     localStorage.setItem('phone', phoneValue);
+  //     localStorage.setItem('comment', comment);
+  //     setIsAddressSelected(true);
+  //     getContacts();
+  //   } else {
+  //     return undefined;
+  //   }
+  // };
 
   const saveNameToLocalStorage = () => {
-    if (nameValue && phoneValue) {
+    if (nameValue && phoneValue && contactId) {
       localStorage.setItem('name', nameValue);
       localStorage.setItem('phone', phoneValue);
       localStorage.setItem('comment', comment);
+      localStorage.setItem('contactId', contactId);
       setIsAddressSelected(true);
-      getContacts();
+      setIsLoading(true);
+      setIsDataReady(true);
     } else {
       return undefined;
     }
   };
+
+
+  useEffect(() => {
+    if (isContactLoaded && isDataReady) {
+      const storedContactId = localStorage.getItem('contactId');
+      if (storedContactId) {
+        getLeadId(storedContactId);
+        setIsLoading(false);
+      }
+    }
+  }, [isContactLoaded, isDataReady]);
 
 
   const formatPhoneNumber = (value) => {
@@ -243,7 +281,7 @@ const Index = () => {
             <Text size={20}> {time || 'не указан'} </Text>
           </div>
           <Text
-            size={20}> {zone || 'не указн'} {hookah ? '+ Кальян' : 'не указан'} </Text>
+            size={20}> {zone || 'не указн'} {hookah === 'буду' ? '+ Кальян' : ' '} </Text>
         </Container>
 
         <form onSubmit={handleSubmit(saveNameToLocalStorage)}>

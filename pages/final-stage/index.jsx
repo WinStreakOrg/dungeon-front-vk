@@ -37,7 +37,7 @@ const Index = () => {
     bookingData;
 
 
-  const handleCloseApp = () => {
+  const handleCloseApp = async () => {
     if (bridge) {
       localStorage.removeItem('time');
       localStorage.removeItem('persons');
@@ -48,9 +48,8 @@ const Index = () => {
       localStorage.removeItem('zone');
       localStorage.removeItem('username');
       localStorage.removeItem('address');
-      // await bridge.send('VKWebAppClose', { status: 'success' });
-      window.location.href = 'https://vk.com/im?sel=-183884616';
-
+      window.location.replace('https://vk.com/im');
+      await bridge.send('VKWebAppClose', { status: 'success' });
     } else {
       console.warn('Telegram WebApp API не доступен.');
     }

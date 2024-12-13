@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Header from '../components/Header/Header';
 import isPropValid from '@emotion/is-prop-valid';
 import { StyleSheetManager } from 'styled-components';
+import { ContactProvider } from '../context/ContactContext';
 
 export default function MyApp({ Component, pageProps }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,9 +13,9 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     bridge.send('VKWebAppInit');
     bridge.send('VKWebAppGetUserInfo').then((data) => {
-        console.log(data);
-        setIsLoading(false);
-      })
+      console.log(data);
+      setIsLoading(false);
+    })
       .catch((error) => console.error(error));
   }, []);
 
@@ -23,7 +24,11 @@ export default function MyApp({ Component, pageProps }) {
       <Header winStreak />
       <StyleSheetManager
         shouldForwardProp={(prop) => isPropValid(prop)}>
-        {isLoading ? <Loading /> : <Component {...pageProps} />}
+        {isLoading ? <Loading /> :
+          <ContactProvider>
+            <Component {...pageProps} />
+          </ContactProvider>
+        }
       </StyleSheetManager>
     </div>
   );

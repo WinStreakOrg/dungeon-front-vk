@@ -14,8 +14,7 @@ export const Root = styled.div`
   justify-content: space-between;
   align-items: start;
   overflow: hidden;
-
-
+  
   ${({ displayHeaderOff }) => displayHeaderOff && css`display: none;`}
 `;
 
@@ -26,7 +25,6 @@ const Header = (props) => {
 
   useEffect(() => {
     if (router.pathname === '/Loading') {
-
       setShowOffHeader(false);
     }
   }, [showOffHeader]);
