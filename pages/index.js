@@ -34,7 +34,6 @@ export default function Home() {
 
 
   const getContacts = async (vkUserId) => {
-
     if (vkUserId) {
       try {
         const response = await axios.get(`/api/getContacts`, {
@@ -53,26 +52,18 @@ export default function Home() {
     }
   };
 
-  const fetchContacts = async () => {
-    await getContacts(vkUserId);
-  };
-
 
   useEffect(() => {
-    bridge.send('VKWebAppGetUserInfo').then((data) => {
-      localStorage.setItem('telegramUserId', vkUserId);
-      setVkUserId(data.id);
-    })
-      .catch((error) => {
+    if (bridge) {
+      bridge.send('VKWebAppGetUserInfo').then((data) => {
+        console.log(data);
+        localStorage.setItem('telegramUserId', data.id);
+        getContacts(data.id);
+      }).catch((error) => {
         console.error('Ошибка получения ID пользователя:', error);
       });
-  }, []);
-
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && vkUserId) {
-      fetchContacts();
     }
+
   }, []);
 
   return (
