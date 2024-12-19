@@ -35,6 +35,8 @@ const Index = () => {
   } = useForm({
     mode: 'onSubmit',
   });
+  const today = new Date().toISOString().split('T')[0];
+
 
   const [selectedHourMenu, setSelectedHourMenu] = useState(false);
   const [selectedMinuteMenu, setSelectedMinuteMenu] = useState(false);
@@ -59,7 +61,50 @@ const Index = () => {
     setDate(today);
     setValue('dateValue', today);
   }, [setValue]);
+
   const router = useRouter();
+
+  // useEffect(() => {
+  //   const now = new Date();
+  //   const currentHour = now.getHours();
+  //   const currentMinute = now.getMinutes();
+  //
+  //   const selectedDate = new Date(date);
+  //   selectedDate.setHours(0, 0, 0, 0);
+  //
+  //   const today = new Date();
+  //   today.setHours(0, 0, 0, 0);
+  //
+  //   const daysDifference = (selectedDate - today) / (1000 * 3600 * 24);
+  //
+  //   let filteredHours = [];
+  //   let filteredMinutes = [];
+  //
+  //   if (daysDifference > 0) {
+  //     filteredHours = itemsHours;
+  //     filteredMinutes = itemsMinutes;
+  //   } else {
+  //     filteredHours = itemsHours.filter((hour) => parseInt(hour, 10) >= currentHour);
+  //
+  //     filteredMinutes = itemsMinutes.filter((minute) => {
+  //       return parseInt(minute, 10) >= currentMinute;
+  //     });
+  //   }
+  //
+  //   setFilteredHours(filteredHours);
+  //   setFilteredMinutes(filteredMinutes);
+  //
+  //   if (filteredHours.length > 0 && !filteredHours.includes(selectedHour)) {
+  //     setSelectedHour(filteredHours[0]);
+  //     setValue('hourValue', filteredHours[0]);
+  //   }
+  //
+  //   if (filteredMinutes.length > 0 && !filteredMinutes.includes(selectedMinute)) {
+  //     setSelectedMinute(filteredMinutes[0]);
+  //     setValue('minuteValue', filteredMinutes[0]);
+  //   }
+  // }, [date, setValue, selectedHour, selectedMinute]);
+
 
   useEffect(() => {
     const now = new Date();
@@ -83,9 +128,11 @@ const Index = () => {
     } else {
       filteredHours = itemsHours.filter((hour) => parseInt(hour, 10) >= currentHour);
 
-      filteredMinutes = itemsMinutes.filter((minute) => {
-        return parseInt(minute, 10) >= currentMinute;
-      });
+      if (parseInt(selectedHour, 10) > currentHour) {
+        filteredMinutes = itemsMinutes;
+      } else {
+        filteredMinutes = itemsMinutes.filter((minute) => parseInt(minute, 10) >= currentMinute);
+      }
     }
 
     setFilteredHours(filteredHours);
@@ -122,27 +169,36 @@ const Index = () => {
 
   useEffect(() => {
     const now = new Date();
-    // console.log(now);
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
+
+    if (currentHour < 12 && !selectedMinute) {
+      setSelectedMinute('00');
+      setValue('minuteValue', '00');
+    }
 
     const updatedHours = itemsHours.filter((hour) => {
       const hourNumber = parseInt(hour, 10);
       return (hourNumber >= currentHour || hourNumber < 5) && hourNumber !== 24;
     });
+
+
     setFilteredHours(updatedHours);
 
     const updatedMinutes = selectedHour === currentHour.toString()
       ? itemsMinutes.filter((minute) => parseInt(minute, 10) >= currentMinute)
       : itemsMinutes;
 
+
     setFilteredMinutes(updatedMinutes);
   }, [selectedHour]);
+
 
 
   useEffect(() => {
     if (isValid) setIsAddressSelected(true);
   }, [isValid]);
+
 
   const handleHourChange = (hour) => {
     setSelectedHour(hour);
@@ -155,10 +211,9 @@ const Index = () => {
       setDate(newDate.toISOString().split('T')[0]);
     }
 
-    // trigger('hourValue');
 
   };
-  //
+
   const handleTimeChange = (hour, minute) => {
     const selectedHourInt = parseInt(hour, 10);
     const selectedMinuteInt = parseInt(minute, 10);
@@ -190,7 +245,6 @@ const Index = () => {
     trigger('minuteValue');
   };
 
-  const today = new Date().toISOString().split('T')[0];
 
   const validateDate = (selectedDate) => {
     if (!selectedDate) {
