@@ -48,11 +48,17 @@ const Index = () => {
       localStorage.removeItem('zone');
       localStorage.removeItem('username');
       localStorage.removeItem('address');
-      window.location.replace('https://vk.com/im');
-      await bridge.send('VKWebAppClose', { status: 'success' });
+
+      try {
+        await bridge.send('VKWebAppClose', { status: 'success' });
+        window.location.replace('https://vk.com/im');
+      } catch (error) {
+        console.error('Error closing VK Web App:', error);
+      }
     } else {
       console.warn('Telegram WebApp API не доступен.');
     }
+
   };
 
   return (
